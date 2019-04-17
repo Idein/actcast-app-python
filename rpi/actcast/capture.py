@@ -1,7 +1,7 @@
 import fcntl
-import threading
+import picamera
 from queue import Queue, Full, Empty
-import v4l2
+import threading
 
 
 class Capture(threading.Thread):
@@ -26,9 +26,11 @@ class Capture(threading.Thread):
             self.camera.capture(stream, format='rgb', use_video_port=True)
             start = time.time()
             self.camera.capture(stream, format='rgb', use_video_port=True)
-            if time.time() - start < 0.09: break
+            if time.time() - start < 0.09:
+                break
             self.camera.framerate += 1
-            if self.camera.framerate >= 30: break
+            if self.camera.framerate >= 30:
+                break
         self.display = display
         n = math.gcd(PREFFERED_DISPLAY_WIDTH, PREFFERED_DISPLAY_HEIGHT)
         black = np.zeros((32 * PREFFERED_DISPLAY_HEIGHT // n, 32 * PREFFERED_DISPLAY_WIDTH // n, 3), dtype=np.uint8)
@@ -36,7 +38,9 @@ class Capture(threading.Thread):
         self.overlay = []
         if self.display:
             bg = self.camera.add_overlay(background, size=(DISPLAY_WIDTH, DISPLAY_HEIGHT), layer=1, alpha=255)
-            self.camera.start_preview(fullscreen=False, window = (OVERSCAN, OVERSCAN, PREVIEW_WIDTH, PREVIEW_HEIGHT), layer=3)
+            self.camera.start_preview(fullscreen=False,
+                                      window=(OVERSCAN, OVERSCAN, PREVIEW_WIDTH, PREVIEW_HEIGHT),
+                                      layer=3)
         self.cmd = cmd
 
     def run(self):
@@ -44,20 +48,22 @@ class Capture(threading.Thread):
             while not self.event.is_set():
                 stream = io.BytesIO()
                 self.camera.capture(stream, format='rgb', use_video_port=True)
-                image = np.asarray(bytearray(stream.getvalue()), dtype=np.uint8).reshape(IMAGENET_HEIGHT,IMAGENET_WIDTH,3)
+                image = np.asarray(bytearray(stream.getvalue()), dtype=np.uint8).reshape(IMAGENET_HEIGHT,
+                                                                                         IMAGENET_WIDTH,
+                                                                                         3)
                 self.cmd.update_image(image)
                 image = image.astype(np.float32)
                 try:
                     self.queue.put(image, timeout=1)
                 except Full:
                     pass
-                except:
+                except Exception:
                     traceback.print_exc()
             if self.display:
                 for ol in self.overlay:
                     self.camera.remove_overlay(ol)
                 self.camera.stop_preview()
-        except: # picamera.exc.PiCameraRuntimeError, etc...
+        except Exception:  # picamera.exc.PiCameraRuntimeError, etc...
             traceback.print_exc()
 
     def get(self):
@@ -71,8 +77,12 @@ class Capture(threading.Thread):
             if not self.event.is_set():
                 if True:
                     # double buffering
-                    layer = self.camera.add_overlay(src, size=(UPDATE_AREA_WIDTH, UPDATE_AREA_HEIGHT), layer=2, alpha=255,
-                                                    fullscreen=False, window=UPDATE_AREA_DISPLAY_WINDOW)
+                    layer = self.camera.add_overlay(src,
+                                                    size=(UPDATE_AREA_WIDTH, UPDATE_AREA_HEIGHT),
+                                                    layer=2,
+                                                    alpha=255,
+                                                    fullscreen=False,
+                                                    window=UPDATE_AREA_DISPLAY_WINDOW)
                     self.overlay.append(layer)
                     if len(self.overlay) > 1:
                         self.camera.remove_overlay(self.overlay.pop(0))

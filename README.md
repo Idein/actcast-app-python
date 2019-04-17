@@ -2,4 +2,5 @@
 This package provides a Python API for developing Actcast apps.
 
 ## Installation
-`pip install . -r requirements.txt`
+For Raspberry Pi: `pip install rpi -r requirements.txt`  
+For PC: `pip install desktop -r requirements.txt`  
