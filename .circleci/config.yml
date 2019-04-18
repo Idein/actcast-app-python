@@ -42,3 +42,9 @@ jobs:
       - store_artifacts:
           path: /root/project/${FILENAME}
           destination: ${FILENAME}
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build-rpi-wheel
