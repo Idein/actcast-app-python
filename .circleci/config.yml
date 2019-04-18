@@ -24,19 +24,21 @@ jobs:
           command: |
             docker exec raspbian chroot /chroot/raspbian apt-get update
             docker exec raspbian chroot /chroot/raspbian apt-get upgrade -y
-            docker exec raspbian chroot /chroot/raspbian apt-get install -y python3 python3-pip
+            docker exec raspbian chroot /chroot/raspbian apt-get install -y python3
             docker exec raspbian chroot /chroot/raspbian apt-get clean
             docker exec raspbian chroot /chroot/raspbian apt-get autoclean
             docker exec raspbian chroot /chroot/raspbian apt-get autoremove -y
       - run:
           name: Create wheel for Raspberry Pi
           command: |
-            docker exec raspbian chroot /chroot/raspbian pip3 install wheel
             docker cp /root/project/rpi/ raspbian:/chroot/raspbian/tmp/
             docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi; python3 setup.py bdist_wheel"
             export FILENAME=`docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi/dist; ls actcast*"`
+            echo ${FILENAME}
       - run:
-          command: docker cp raspbian:/chroot/raspbian/tmp/rpi/${FILENAME} /root/project/
+          command: |
+            docker cp raspbian:/chroot/raspbian/tmp/rpi/${FILENAME} /root/project/
+            ls /root/project/
       - run:
           command: docker stop raspbian
       - store_artifacts:
