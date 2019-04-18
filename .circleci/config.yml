@@ -32,11 +32,11 @@ jobs:
           name: Create wheel for Raspberry Pi
           command: |
             docker exec raspbian chroot /chroot/raspbian pip3 install wheel
-            cp -a /root/project/rpi /chroot/raspbian/tmp/
-            docker exec raspbian chroot /chroot/raspbian cd /tmp; python3 setup.py bdist_wheel
-            export FILENAME=`docker exec raspbian chroot /chroot/raspbian ls /tmp/dist/actcast*`
+            docker cp /root/project/rpi/ raspbian:/chroot/raspbian/tmp/
+            docker exec raspbian chroot /chroot/raspbian "cd /tmp/rpi; python3 setup.py bdist_wheel"
+            export FILENAME=`docker exec raspbian chroot /chroot/raspbian "ls /tmp/rpi/dist/actcast*"`
       - run:
-          command: docker cp raspbian:/tmp/${FILENAME} /root/project/${FILENAME}
+          command: docker cp raspbian:/chroot/raspbian/tmp/rpi/${FILENAME} /root/project/
       - run:
           command: docker stop raspbian
       - store_artifacts:
