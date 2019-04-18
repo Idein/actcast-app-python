@@ -35,9 +35,8 @@ jobs:
             docker cp /root/project/rpi/ raspbian:/chroot/raspbian/tmp/
             docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi; python3 setup.py bdist_wheel"
             export FILENAME=`docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi/dist; ls actcast*"`
-            echo ${FILENAME}
             docker cp raspbian:/chroot/raspbian/tmp/rpi/dist/${FILENAME} /root/project/
-            ls /root/project/
+            echo "export FILENAME=${FILENAME}" >> $BASH_ENV
       - run:
           command: docker stop raspbian
       - store_artifacts:
