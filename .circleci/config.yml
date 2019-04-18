@@ -33,8 +33,8 @@ jobs:
           command: |
             docker exec raspbian chroot /chroot/raspbian pip3 install wheel
             docker cp /root/project/rpi/ raspbian:/chroot/raspbian/tmp/
-            docker exec raspbian chroot /chroot/raspbian "cd /tmp/rpi; python3 setup.py bdist_wheel"
-            export FILENAME=`docker exec raspbian chroot /chroot/raspbian "ls /tmp/rpi/dist/actcast*"`
+            docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi; python3 setup.py bdist_wheel"
+            export FILENAME=`docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi/dist; ls actcast*"`
       - run:
           command: docker cp raspbian:/chroot/raspbian/tmp/rpi/${FILENAME} /root/project/
       - run:
