@@ -1,10 +1,6 @@
 """Setup tool of actsim."""
-
-
 import setuptools
 
-with open("../README.md", "r") as fh:
-    long_description = fh.read()
 
 setuptools.setup(
     name="actcast",
@@ -16,7 +12,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Idein/actcast-py",
     packages=setuptools.find_packages(),
-    install_requires=['pillow', 'picamera'],
+    install_requires=['picamera'],
     python_requires='~=3.5.3',
     tests_require=['nose2'],
     test_suite='nose2.collector.collector',

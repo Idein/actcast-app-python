@@ -1,0 +1,44 @@
+version: 2
+jobs:
+  build-rpi-wheel:
+    docker:
+      - image: docker:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Login docker registry
+          command: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+      - run:
+          name: Enable user mode emulation
+          command: docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - run:
+          name: Start raspbian container
+          command: docker run -d --name=raspbian --privileged --rm -it -v /dev:/dev idein/raspbian /bin/bash
+      - run:
+          name: Enable ssh
+          command: |
+            docker exec raspbian chroot /chroot/raspbian touch /boot/ssh
+      - run:
+          name: Install python
+          command: |
+            docker exec raspbian chroot /chroot/raspbian apt-get update
+            docker exec raspbian chroot /chroot/raspbian apt-get upgrade -y
+            docker exec raspbian chroot /chroot/raspbian apt-get install -y python3 python3-pip
+            docker exec raspbian chroot /chroot/raspbian apt-get clean
+            docker exec raspbian chroot /chroot/raspbian apt-get autoclean
+            docker exec raspbian chroot /chroot/raspbian apt-get autoremove -y
+      - run:
+          name: Create wheel for Raspberry Pi
+          command: |
+            docker exec raspbian chroot /chroot/raspbian pip3 install wheel
+            docker cp -a /root/project/rpi raspbian:/chroot/raspbian/tmp/
+            docker exec raspbian chroot /chroot/raspbian cd /tmp; python3 setup.py bdist_wheel
+            export FILENAME=`docker exec raspbian chroot /chroot/raspbian ls /tmp/dist/actcast*`
+      - run:
+          command: docker cp raspbian:/tmp/${FILENAME} /root/project/${FILENAME}
+      - run:
+          command: docker stop raspbian
+      - store_artifacts:
+          path: /root/project/${FILENAME}
+          destination: ${FILENAME}
