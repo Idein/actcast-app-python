@@ -24,5 +24,5 @@ setup(
     ],
     keywords='actcast',
     packages=find_packages(),
-    install_requires=[],
+    install_requires=['Pillow'],
 )
