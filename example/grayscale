@@ -33,6 +33,7 @@ class Presenter(Consumer):
         rgb_image, gray_image = images
         self.cmd.update_image(rgb_image) # update `Take Photo` image
         actfw.notice([{'test':True}])
+        actfw.heartbeat()
         if self.settings['display']:
             gray_image = gray_image.convert('RGB')
             self.display.update((0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT), gray_image.tobytes(), (CAPTURE_WIDTH, CAPTURE_HEIGHT), 'rgb')
