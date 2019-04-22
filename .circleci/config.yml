@@ -35,12 +35,13 @@ jobs:
             docker cp /root/project/rpi/ raspbian:/chroot/raspbian/tmp/
             docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi; python3 setup.py bdist_wheel"
             export FILENAME=`docker exec raspbian chroot /chroot/raspbian bash -c "cd /tmp/rpi/dist; ls actcast*"`
-            docker cp raspbian:/chroot/raspbian/tmp/rpi/dist/${FILENAME} /root/project/actcast.whl
+            if [[ ${FILENAME} != 'actcast-0.0.1-py3-none-any.whl' ]]; then exit 1; fi
+            docker cp raspbian:/chroot/raspbian/tmp/rpi/dist/actcast-0.0.1-py3-none-any.whl /root/project/actcast.whl
       - run:
           command: docker stop raspbian
       - store_artifacts:
-          path: /root/project/actcast.whl
-          destination: actcast.whl
+          path: /root/project/actcast-0.0.1-py3-none-any.whl
+          destination: actcast-0.0.1-py3-none-any.whl
 
 workflows:
   version: 2
