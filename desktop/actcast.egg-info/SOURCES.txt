@@ -1,7 +1,0 @@
-actcast/__init__.py
-actcast/capture.py
-actcast/command_server.py
-actcast.egg-info/PKG-INFO
-actcast.egg-info/SOURCES.txt
-actcast.egg-info/dependency_links.txt
-actcast.egg-info/top_level.txt
