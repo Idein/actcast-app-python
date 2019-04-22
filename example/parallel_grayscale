@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import argparse
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 from picamera import PiCamera
 import actfw
 from actfw.task import Pipe, Consumer
@@ -26,7 +26,6 @@ class Presenter(Consumer):
         self.settings = settings
         self.camera = camera
         self.cmd = cmd
-        self.font = ImageFont.truetype(font='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', size=18)
         if self.settings['display']:
             self.display = actfw.Display(camera, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
