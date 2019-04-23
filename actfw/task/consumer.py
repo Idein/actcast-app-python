@@ -18,4 +18,6 @@ class Consumer(Pipe):
                 break
 
     def connect(self, follow):
+        if not issubclass(type(follow), Task):
+            raise TypeError("type(follow) must be a subclass of actfw.task.Task.")
         raise NotImplementedError('This is consumer')

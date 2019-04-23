@@ -6,6 +6,13 @@ from .task import Task
 
 class Pipe(Task):
 
+    """__init__(self)
+
+    Straightforward pipeline task.
+
+
+    """
+
     def __init__(self):
         super(Pipe, self).__init__()
         self.running = True
@@ -58,7 +65,7 @@ class Pipe(Task):
                 break
 
     def proc(self, i):
-        raise NotImplementedError('require impl.')
+        raise NotImplementedError("'proc' must be overridden.")
 
     def stop(self):
         self.running = False
