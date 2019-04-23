@@ -12,8 +12,8 @@ jobs:
             apt-get install -y ca-certificates python3-wheel python3-setuptools
             python3 setup.py bdist_wheel
       - store_artifacts:
-          path: /root/project/dist/actfw-1.0.0-py3-none-any.whl
-          destination: actfw-1.0.0-py3-none-any.whl
+          path: /root/project/dist/actfw-1.0.1-py3-none-any.whl
+          destination: actfw-1.0.1-py3-none-any.whl
 
 workflows:
   version: 2
