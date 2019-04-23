@@ -12,7 +12,7 @@ setup(
     description='Actcast Application Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/Idein/actcast-py',
+    url='https://github.com/Idein/actcast-app-python',
     author='Idein Inc.',
     author_email='n.ohkawa@idein.jp',
     license='MIT',
