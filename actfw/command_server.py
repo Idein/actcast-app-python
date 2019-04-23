@@ -1,6 +1,7 @@
-import io, os, socket, threading, base64
-from PIL import Image
+import io, os, socket, base64
+from threading import Lock
 import traceback
+from .task import Isolated
 
 def read_tokens(conn, n):
     result = []
@@ -22,16 +23,18 @@ def read_bytes(conn, n):
         result += conn.recv(1024)
     return result
 
-class CommandServer(threading.Thread):
+class CommandServer(Isolated):
 
     def __init__(self, sock_path=None):
         super(CommandServer, self).__init__()
-        self.sock_path = sock_path
+        self.sock_path = None
         env = 'ACTCAST_COMMAND_SOCK'
         if env in os.environ:
             self.sock_path = os.environ[env]
+        if sock_path is not None:
+            self.sock_path = sock_path
         self.running = True
-        self.img_lock = threading.Lock()
+        self.img_lock = Lock()
         self.img = None
 
     def run(self):

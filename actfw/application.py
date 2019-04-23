@@ -1,4 +1,5 @@
 import os, signal, time, json
+from actfw.task import Task
 
 class Application:
 
@@ -14,12 +15,16 @@ class Application:
                 pass
 
     def get_settings(self, default_settings):
+        if not isinstance(default_settings, dict):
+            raise TypeError("default_settings must be dict.")
         settings = default_settings.copy()
         if self.settings is not None:
             settings.update(self.settings)
         return settings
 
     def register_task(self, task):
+        if not issubclass(type(task), Task):
+            raise TypeError("type(task) must be a subclass of actfw.task.Task.")
         self.tasks.append(task)
 
     def run(self):

@@ -2,8 +2,9 @@ from threading import Thread
 from queue import Queue, Empty, Full
 import traceback
 import inspect
+from .task import Task
 
-class Pipe(Thread):
+class Pipe(Task):
 
     def __init__(self):
         super(Pipe, self).__init__()

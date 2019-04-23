@@ -8,19 +8,15 @@ class Display:
         scale_w = self.preferred_size[0] / self.size[0]
         scale_h = self.preferred_size[1] / self.size[1]
         self.scale = min(scale_w, scale_h)
-        self.ofs_w = 0
-        self.ofs_h = 0
-        if (scale_w > scale_h):
-            self.ofs_w = (self.preferred_size[0] - self.scale * self.size[0]) / 2.0
-        else:
-            self.ofs_h = (self.preferred_size[1] - self.scale * self.size[1]) / 2.0
+        self.ofs_w = (self.preferred_size[0] - self.size[0] * self.scale) / 2.0
+        self.ofs_h = (self.preferred_size[1] - self.size[1] * self.scale) / 2.0
         self.camera = camera
         self.layer = None
 
     def update(self, dst_rect, src_buf, src_size, src_format):
         rect = (
-            int((dst_rect[0] - self.size[0] / 2.0) * self.scale + (self.preferred_size[0] - self.ofs_w) / 2.0),
-            int((dst_rect[1] - self.size[1] / 2.0) * self.scale + (self.preferred_size[1] - self.ofs_h) / 2.0),
+            int(dst_rect[0] * self.scale + self.ofs_w),
+            int(dst_rect[1] * self.scale + self.ofs_h),
             int(dst_rect[2] * self.scale),
             int(dst_rect[3] * self.scale),
         )
