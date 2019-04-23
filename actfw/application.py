@@ -4,6 +4,9 @@ from actfw.task import Task
 class Application:
 
     def __init__(self):
+        self.running = True
+        signal.signal(signal.SIGINT, self._handler)
+        signal.signal(signal.SIGTERM, self._handler)
         self.tasks = []
         self.settings = None
         env = 'ACT_SETTINGS_PATH'
@@ -13,6 +16,9 @@ class Application:
                     self.settings = json.load(f)
             except FileNotFoundError:
                 pass
+
+    def _handler(self, sig, frame):
+        self.running = False
 
     def get_settings(self, default_settings):
         if not isinstance(default_settings, dict):
@@ -33,12 +39,10 @@ class Application:
             task.start()
 
         try:
-            sigint_handler = signal.getsignal(signal.SIGINT)
-            while True:
+            while self.running:
                 time.sleep(1)
         except KeyboardInterrupt:
-            signal.signal(signal.SIGINT, signal.SIG_IGN)
-            time.sleep(1)
+            pass
         except:
             raise
 
