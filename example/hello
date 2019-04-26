@@ -22,7 +22,7 @@ class Presenter(Consumer):
     def proc(self, frame):
         image = Image.frombuffer('RGB', (CAPTURE_WIDTH, CAPTURE_HEIGHT), frame.getvalue(), 'raw', 'RGB')
         self.cmd.update_image(image) # update `Take Photo` image
-        actfw.notice([{'test':True}])
+        actfw.notify([{'test':True}])
         actfw.heartbeat()
         if self.settings['display']:
             draw = ImageDraw.Draw(image)
