@@ -10,9 +10,9 @@ from actfw import _version
 
 __version__ = _version.__version__
 
-def notice(notices, *args, **kwargs):
+def notify(notification, *args, **kwargs):
     kwargs['flush'] = True
-    print(json.dumps(notices), *args, **kwargs)
+    print(json.dumps(notification), *args, **kwargs)
 
 _default_heartbeat_file = Path('/root/heartbeat')
 

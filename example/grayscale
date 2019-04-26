@@ -31,7 +31,7 @@ class Presenter(Consumer):
     def proc(self, images):
         rgb_image, gray_image = images
         self.cmd.update_image(rgb_image) # update `Take Photo` image
-        actfw.notice([{'test':True}])
+        actfw.notify([{'test':True}])
         actfw.heartbeat()
         if self.settings['display']:
             gray_image = gray_image.convert('RGB')
