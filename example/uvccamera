@@ -1,0 +1,63 @@
+#!/usr/bin/python3
+import argparse
+from PIL import Image
+import actfw
+from actfw.task import Pipe, Consumer
+
+(CAPTURE_WIDTH, CAPTURE_HEIGHT) = (320, 240) # capture image size
+(DISPLAY_WIDTH, DISPLAY_HEIGHT) = (640, 480) # display area size
+
+class Converter(Pipe):
+
+    def __init__(self):
+        super(Converter, self).__init__()
+
+    def proc(self, frame):
+        rgb_image = Image.frombuffer('RGB', (CAPTURE_WIDTH, CAPTURE_HEIGHT), frame.getvalue(), 'raw', 'RGB')
+        gray_image = rgb_image.convert('L')
+        return (rgb_image, gray_image)
+
+class Analyzer(Consumer):
+
+    def __init__(self, cmd):
+        super(Analyzer, self).__init__()
+        self.cmd = cmd
+
+    def proc(self, images):
+        rgb_image, gray_image = images
+        histo = gray_image.histogram()
+        self.cmd.update_image(rgb_image) # update `Take Photo` image
+        actfw.notify([{'histogram':histo}])
+        actfw.heartbeat()
+
+def main(args):
+
+    # Actcast application
+    app = actfw.Application()
+
+    # CommandServer (for `Take Photo` command)
+    cmd = actfw.CommandServer()
+    app.register_task(cmd)
+
+    # Capture task
+    cap = actfw.capture.V4LCameraCapture('/dev/video0', (CAPTURE_WIDTH, CAPTURE_HEIGHT), 30)
+    app.register_task(cap)
+
+    # Converter task
+    conv = Converter()
+    app.register_task(conv)
+
+    # Analyzer task
+    anal = Analyzer(cmd)
+    app.register_task(anal)
+
+    # Make task connection
+    cap.connect(conv)  # from `cap` to `conv`
+    conv.connect(anal) # from `conv` to `anal`
+
+    # Start application
+    app.run()
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(description='example: capture from UVC camera')
+    main(parser.parse_args())
