@@ -630,22 +630,18 @@ class VideoStream(object):
         buf = self.video.dequeue_buffer(timeout=timeout)
         mapped_buf = buf.get_mapped_buffer()
 
+        dst = bytes(self.video.expected_fmt.fmt.pix.sizeimage)
         if in_expected_format:
-            dst = ARRAY(c_uint8, self.video.expected_fmt.fmt.pix.sizeimage)()
             _v4lconvert.convert(self.video.converter,
                                 byref(self.video.fmt),
                                 byref(self.video.expected_fmt),
                                 mapped_buf,
                                 self.video.fmt.fmt.pix.sizeimage,
-                                addressof(dst),
+                                cast(dst, POINTER(c_uint8)),
                                 self.video.expected_fmt.fmt.pix.sizeimage)
-            stream = io.BytesIO()
-            stream.write(dst)
-            dst = stream.getvalue()
         else:
-            stream = io.BytesIO()
+            stream = io.BytesIO(dst)
             stream.write(mapped_buf.contents)
-            dst = stream.getvalue()
 
         buf.unmap_buffer()
         self.video.requeue_buffer(buf)
