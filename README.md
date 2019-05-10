@@ -93,9 +93,12 @@ Please, see and try examples.
     * Support application heartbeat
     * Support "Take Photo" command
 * `example/uvccamera` : UVC camera capture example
-    * Use HDMI display as 640x480 area
+    * `picamera` is unnecessary
+    * Use HDMI display center 640x480 area
     * Capture 320x240 RGB image from UVC camera
     * Convert it to grayscale
+    * Display it as 640x480 image (with x2 scaling)
     * Notice grayscale pixel data histogram
+    * Support application setting
     * Support application heartbeat
     * Support "Take Photo" command
