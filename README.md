@@ -20,7 +20,8 @@ Construct your application with a task parallel model
     * `actfw.Application` : Main application
 * Workers
     * `actfw.task.Producer` : Task generator
-        * `actfw.PiCameraCapture` : Task generator which generate capture image as task
+        * `actfw.capture.PiCameraCapture` : Generate CSI camera capture image
+        * `actfw.capture.V4LCameraCapture` : Generate UVC camera capture image
     * `actfw.task.Pipe` : Task to Task converter
     * `actfw.task.Consumer` : Task terminator
 
@@ -63,7 +64,7 @@ Please, see and try examples.
 
 * `example/hello` : The most simple application example
     * Use HDMI display as 640x480 area
-    * Capture 320x240 RGB image
+    * Capture 320x240 RGB image from CSI camera
     * Draw "Hello, Actcast!" text
     * Display it as 640x480 image (with x2 scaling)
     * Notice message for each frame
@@ -72,7 +73,7 @@ Please, see and try examples.
     * Support "Take Photo" command
 * `example/grayscale` : Next level application example
     * Use HDMI display as 640x480 area
-    * Capture 320x240 RGB image
+    * Capture 320x240 RGB image from CSI camera
     * Convert it to grayscale
     * Display it as 640x480 image (with x2 scaling)
     * Notice message for each frame
@@ -81,13 +82,23 @@ Please, see and try examples.
     * Support "Take Photo" command
 * `example/parallel_grayscale` : Paralell processing application example
     * Use HDMI display as 640x480 area
-    * Capture 320x240 RGB image
+    * Capture 320x240 RGB image from CSI camera
     * Convert it to grayscale
         * There exists 2 converter task
         * Round-robin task scheduling
     * Display it as 640x480 image (with x2 scaling)
     * Notice message for each frame
         * Show which converter processes image
+    * Support application setting
+    * Support application heartbeat
+    * Support "Take Photo" command
+* `example/uvccamera` : UVC camera capture example
+    * `picamera` is unnecessary
+    * Use HDMI display center 640x480 area
+    * Capture 320x240 RGB image from UVC camera
+    * Convert it to grayscale
+    * Display it as 640x480 image (with x2 scaling)
+    * Notice grayscale pixel data histogram
     * Support application setting
     * Support application heartbeat
     * Support "Take Photo" command
