@@ -1,4 +1,4 @@
-import io
+import io, time
 from queue import Full
 from .task import Producer
 from actfw.v4l2.video import Video, V4L2_PIX_FMT
@@ -89,6 +89,7 @@ class V4LCameraCapture(Producer):
     def run(self):
 
         with self.video.start_streaming() as stream:
+            time.sleep(1) # for Logicool C270
             while self._is_running():
                 try:
                     value = stream.capture()
@@ -104,6 +105,7 @@ class V4LCameraCapture(Producer):
                         self.frames.append(frame)
                 except:
                     raise
+        self.video.close()
 
     def _outlet(self, o):
         length = len(self.out_queues)

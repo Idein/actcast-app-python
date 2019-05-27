@@ -510,7 +510,7 @@ class Video(object):
 
         result = _v4lconvert.try_format(self.converter, byref(self.expected_fmt), byref(self.fmt))
         if -1 == result:
-            raise RuntimeError("ioctl(VIDIOC_S_FMT)")
+            raise RuntimeError("incompatible format")
 
         result = self._ioctl(_VIDIOC.S_FMT, byref(self.fmt))
         if -1 == result:
