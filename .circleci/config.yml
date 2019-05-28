@@ -19,9 +19,14 @@ jobs:
           name: Make wheel
           command: |
             python3 setup.py bdist_wheel
+      - run:
+          name: Put artifacts
+          command: |
+            mkdir /root/artifacts
+            mv /root/project/dist/*.whl /root/artifacts/
       - store_artifacts:
-          path: /root/project/dist/actfw-1.1.0-py3-none-any.whl
-          destination: actfw-1.1.0-py3-none-any.whl
+          path: /root/artifacts
+          destination: artifacts
 
 workflows:
   version: 2
