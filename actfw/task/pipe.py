@@ -4,6 +4,7 @@ import traceback
 import inspect
 from .task import Task
 
+
 class Pipe(Task):
 
     """__init__(self)
@@ -34,7 +35,7 @@ class Pipe(Task):
         length = len(self.in_queues)
         while self._is_running():
             try:
-                i = self.in_queues[in_queue_id%length].get(timeout=1)
+                i = self.in_queues[in_queue_id % length].get(timeout=1)
                 yield i
                 in_queue_id += 1
             except Empty:
@@ -48,7 +49,7 @@ class Pipe(Task):
         length = len(self.out_queues)
         while self._is_running():
             try:
-                self.out_queues[self.out_queue_id%length].put(o, timeout=1)
+                self.out_queues[self.out_queue_id % length].put(o, timeout=1)
                 self.out_queue_id += 1
                 return True
             except Full:

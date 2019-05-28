@@ -1,4 +1,6 @@
-import subprocess, re
+import subprocess
+import re
+
 
 class EDID:
 
@@ -15,4 +17,4 @@ class EDID:
                 xres = result.group(3)
                 yres = result.group(4)
                 return (int(xres), int(yres))
-        return (640, 480) # fallback
+        return (640, 480)  # fallback

@@ -1,7 +1,9 @@
-import io, time
+import io
+import time
 from queue import Full
 from .task import Producer
 from actfw.v4l2.video import Video, V4L2_PIX_FMT
+
 
 class Frame(object):
 
@@ -18,6 +20,7 @@ class Frame(object):
             self.value = value
             return True
         return False
+
 
 class PiCameraCapture(Producer):
 
@@ -56,7 +59,7 @@ class PiCameraCapture(Producer):
         length = len(self.out_queues)
         while self._is_running():
             try:
-                self.out_queues[self.out_queue_id%length].put(o, block=False)
+                self.out_queues[self.out_queue_id % length].put(o, block=False)
                 self.out_queue_id += 1
                 return True
             except Full:
@@ -65,10 +68,11 @@ class PiCameraCapture(Producer):
                 traceback.print_exc()
         return False
 
+
 class V4LCameraCapture(Producer):
 
-    def __init__(self, device = '/dev/video0', size = (640, 480), framerate = 30,
-                 expected_format = V4L2_PIX_FMT.RGB24, fallback_formats = [ V4L2_PIX_FMT.YUYV ]):
+    def __init__(self, device='/dev/video0', size=(640, 480), framerate=30,
+                 expected_format=V4L2_PIX_FMT.RGB24, fallback_formats=[V4L2_PIX_FMT.YUYV]):
         super(V4LCameraCapture, self).__init__()
         self.video = Video(device)
         self.frames = []
@@ -89,7 +93,7 @@ class V4LCameraCapture(Producer):
     def run(self):
 
         with self.video.start_streaming() as stream:
-            time.sleep(1) # for Logicool C270
+            time.sleep(1)  # for Logicool C270
             while self._is_running():
                 try:
                     value = stream.capture()
@@ -111,7 +115,7 @@ class V4LCameraCapture(Producer):
         length = len(self.out_queues)
         while self._is_running():
             try:
-                self.out_queues[self.out_queue_id%length].put(o, block=False)
+                self.out_queues[self.out_queue_id % length].put(o, block=False)
                 self.out_queue_id += 1
                 return True
             except Full:

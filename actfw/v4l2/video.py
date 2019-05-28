@@ -1,9 +1,15 @@
-import os, enum, errno, itertools, mmap, select
+import os
+import enum
+import errno
+import itertools
+import mmap
+import select
 from ctypes import *
 from ctypes.util import find_library
 from actfw.v4l2.types import *
 from actfw.v4l2.control import *
 import io
+
 
 class _libv4l2(object):
 
@@ -11,7 +17,7 @@ class _libv4l2(object):
         self.lib = None
         path = find_library('v4l2')
         if path is not None:
-            self.lib = CDLL(path, use_errno = True)
+            self.lib = CDLL(path, use_errno=True)
 
     def ioctl(self, *args, **kwargs):
         if self.lib is None:
@@ -28,13 +34,14 @@ class _libv4l2(object):
             raise FileNotFoundError("Not found: 'libv4l2.so'")
         return self.lib.v4l2_munmap(*args, **kwargs)
 
+
 class _libv4lconvert(object):
 
     def __init__(self):
         self.lib = None
         path = find_library('v4lconvert')
         if path is not None:
-            self.lib = CDLL(path, use_errno = True)
+            self.lib = CDLL(path, use_errno=True)
 
     def create(self, *args, **kwargs):
         if self.lib is None:
@@ -50,6 +57,7 @@ class _libv4lconvert(object):
         if self.lib is None:
             raise FileNotFoundError("Not found: 'libv4lconvert.so'")
         return self.lib.v4lconvert_try_format(*args, **kwargs)
+
 
 _v4l2 = _libv4l2()
 _v4lconvert = _libv4lconvert()
@@ -74,90 +82,104 @@ _IOC_NONE = 0
 _IOC_WRITE = 1
 _IOC_READ = 2
 
+
 def _IOC(dir, type, nr, size):
     return (dir << _IOC_DIRSHIFT) | (ord(type) << _IOC_TYPESHIFT) | (nr << _IOC_NRSHIFT) | (size << _IOC_SIZESHIFT)
 
+
 def _IO(type, nr): return _IOC(_IOC_NONE, type, nr, 0)
+
+
 def _IOR(type, nr, size): return _IOC(_IOC_READ, type, nr, sizeof(size))
+
+
 def _IOW(type, nr, size): return _IOC(_IOC_WRITE, type, nr, sizeof(size))
+
+
 def _IOWR(type, nr, size): return _IOC(_IOC_READ | _IOC_WRITE, type, nr, sizeof(size))
 
+
 class _VIDIOC(enum.IntEnum):
-    QUERYCAP            = _IOR ('V',  0, capability)
-    ENUM_FMT            = _IOWR('V',  2, fmtdesc)
-    S_FMT               = _IOWR('V',  5, format)
-    REQBUFS             = _IOWR('V',  8, requestbuffers)
-    QUERYBUF            = _IOWR('V',  9, buffer)
-    QBUF                = _IOWR('V', 15, buffer)
-    DQBUF               = _IOWR('V', 17, buffer)
-    STREAMON            = _IOW ('V', 18, c_int)
-    STREAMOFF           = _IOW ('V', 19, c_int)
-    S_PARM              = _IOWR('V', 22, streamparm)
-    S_CTRL              = _IOWR('V', 28, control)
-    ENUM_FRAMESIZES     = _IOWR('V', 74, frmsizeenum)
+    QUERYCAP = _IOR('V',  0, capability)
+    ENUM_FMT = _IOWR('V',  2, fmtdesc)
+    S_FMT = _IOWR('V',  5, format)
+    REQBUFS = _IOWR('V',  8, requestbuffers)
+    QUERYBUF = _IOWR('V',  9, buffer)
+    QBUF = _IOWR('V', 15, buffer)
+    DQBUF = _IOWR('V', 17, buffer)
+    STREAMON = _IOW('V', 18, c_int)
+    STREAMOFF = _IOW('V', 19, c_int)
+    S_PARM = _IOWR('V', 22, streamparm)
+    S_CTRL = _IOWR('V', 28, control)
+    ENUM_FRAMESIZES = _IOWR('V', 74, frmsizeenum)
     ENUM_FRAMEINTERVALS = _IOWR('V', 75, frmivalenum)
 
-_V4L2_CAP_VIDEO_CAPTURE          = 0x00000001
-_V4L2_CAP_VIDEO_OUTPUT           = 0x00000002
-_V4L2_CAP_VIDEO_OVERLAY          = 0x00000004
-_V4L2_CAP_VBI_CAPTURE            = 0x00000010
-_V4L2_CAP_VBI_OUTPUT             = 0x00000020
-_V4L2_CAP_SLICED_VBI_CAPTURE     = 0x00000040
-_V4L2_CAP_SLICED_VBI_OUTPUT      = 0x00000080
-_V4L2_CAP_RDS_CAPTURE            = 0x00000100
-_V4L2_CAP_VIDEO_OUTPUT_OVERLAY   = 0x00000200
-_V4L2_CAP_HW_FREQ_SEEK           = 0x00000400
-_V4L2_CAP_RDS_OUTPUT             = 0x00000800
-_V4L2_CAP_VIDEO_CAPTURE_MPLANE   = 0x00001000
-_V4L2_CAP_VIDEO_OUTPUT_MPLANE    = 0x00002000
-_V4L2_CAP_VIDEO_M2M_MPLANE       = 0x00004000
-_V4L2_CAP_VIDEO_M2M              = 0x00008000
-_V4L2_CAP_TUNER                  = 0x00010000
-_V4L2_CAP_AUDIO                  = 0x00020000
-_V4L2_CAP_RADIO                  = 0x00040000
-_V4L2_CAP_MODULATOR              = 0x00080000
-_V4L2_CAP_SDR_CAPTURE            = 0x00100000
-_V4L2_CAP_EXT_PIX_FORMAT         = 0x00200000
-_V4L2_CAP_SDR_OUTPUT             = 0x00400000
-_V4L2_CAP_READWRITE              = 0x01000000
-_V4L2_CAP_ASYNCIO                = 0x02000000
-_V4L2_CAP_STREAMING              = 0x04000000
-_V4L2_CAP_TOUCH                  = 0x10000000
-_V4L2_CAP_DEVICE_CAPS            = 0x80000000
 
-def _fourcc   (a, b, c, d): return (ord(a) | (ord(b) << 8) | (ord(c) << 16) | (ord(d) << 24))
+_V4L2_CAP_VIDEO_CAPTURE = 0x00000001
+_V4L2_CAP_VIDEO_OUTPUT = 0x00000002
+_V4L2_CAP_VIDEO_OVERLAY = 0x00000004
+_V4L2_CAP_VBI_CAPTURE = 0x00000010
+_V4L2_CAP_VBI_OUTPUT = 0x00000020
+_V4L2_CAP_SLICED_VBI_CAPTURE = 0x00000040
+_V4L2_CAP_SLICED_VBI_OUTPUT = 0x00000080
+_V4L2_CAP_RDS_CAPTURE = 0x00000100
+_V4L2_CAP_VIDEO_OUTPUT_OVERLAY = 0x00000200
+_V4L2_CAP_HW_FREQ_SEEK = 0x00000400
+_V4L2_CAP_RDS_OUTPUT = 0x00000800
+_V4L2_CAP_VIDEO_CAPTURE_MPLANE = 0x00001000
+_V4L2_CAP_VIDEO_OUTPUT_MPLANE = 0x00002000
+_V4L2_CAP_VIDEO_M2M_MPLANE = 0x00004000
+_V4L2_CAP_VIDEO_M2M = 0x00008000
+_V4L2_CAP_TUNER = 0x00010000
+_V4L2_CAP_AUDIO = 0x00020000
+_V4L2_CAP_RADIO = 0x00040000
+_V4L2_CAP_MODULATOR = 0x00080000
+_V4L2_CAP_SDR_CAPTURE = 0x00100000
+_V4L2_CAP_EXT_PIX_FORMAT = 0x00200000
+_V4L2_CAP_SDR_OUTPUT = 0x00400000
+_V4L2_CAP_READWRITE = 0x01000000
+_V4L2_CAP_ASYNCIO = 0x02000000
+_V4L2_CAP_STREAMING = 0x04000000
+_V4L2_CAP_TOUCH = 0x10000000
+_V4L2_CAP_DEVICE_CAPS = 0x80000000
+
+
+def _fourcc(a, b, c, d): return (ord(a) | (ord(b) << 8) | (ord(c) << 16) | (ord(d) << 24))
+
+
 def _fourcc_be(a, b, c, d): return (_fourcc(a, b, c, d) | (1 << 31))
 
+
 class V4L2_PIX_FMT(enum.IntEnum):
-    RGB332 = _fourcc   ('R', 'G', 'B', '1')
-    RGB444 = _fourcc   ('R', '4', '4', '4')
-    ARGB444 = _fourcc   ('A', 'R', '1', '2')
-    XRGB444 = _fourcc   ('X', 'R', '1', '2')
-    RGB555 = _fourcc   ('R', 'G', 'B', 'O')
-    ARGB555 = _fourcc   ('A', 'R', '1', '5')
-    XRGB555 = _fourcc   ('X', 'R', '1', '5')
-    RGB565 = _fourcc   ('R', 'G', 'B', 'P')
-    RGB555X = _fourcc   ('R', 'G', 'B', 'Q')
+    RGB332 = _fourcc('R', 'G', 'B', '1')
+    RGB444 = _fourcc('R', '4', '4', '4')
+    ARGB444 = _fourcc('A', 'R', '1', '2')
+    XRGB444 = _fourcc('X', 'R', '1', '2')
+    RGB555 = _fourcc('R', 'G', 'B', 'O')
+    ARGB555 = _fourcc('A', 'R', '1', '5')
+    XRGB555 = _fourcc('X', 'R', '1', '5')
+    RGB565 = _fourcc('R', 'G', 'B', 'P')
+    RGB555X = _fourcc('R', 'G', 'B', 'Q')
     ARGB555X = _fourcc_be('A', 'R', '1', '5')
     XRGB555X = _fourcc_be('X', 'R', '1', '5')
-    RGB565X = _fourcc   ('R', 'G', 'B', 'R')
-    BGR666 = _fourcc   ('B', 'G', 'R', 'H')
-    BGR24 = _fourcc   ('B', 'G', 'R', '3')
-    RGB24 = _fourcc   ('R', 'G', 'B', '3')
-    BGR32 = _fourcc   ('B', 'G', 'R', '4')
-    ABGR32 = _fourcc   ('A', 'R', '2', '4')
-    XBGR32 = _fourcc   ('X', 'R', '2', '4')
-    RGB32 = _fourcc   ('R', 'G', 'B', '4')
-    ARGB32 = _fourcc   ('B', 'A', '2', '4')
-    XRGB32 = _fourcc   ('B', 'X', '2', '4')
-    GREY = _fourcc   ('G', 'R', 'E', 'Y')
-    Y4 = _fourcc   ('Y', '0', '4', ' ')
-    Y6 = _fourcc   ('Y', '0', '6', ' ')
-    Y10 = _fourcc   ('Y', '1', '0', ' ')
-    Y12 = _fourcc   ('Y', '1', '2', ' ')
-    Y16 = _fourcc   ('Y', '1', '6', ' ')
+    RGB565X = _fourcc('R', 'G', 'B', 'R')
+    BGR666 = _fourcc('B', 'G', 'R', 'H')
+    BGR24 = _fourcc('B', 'G', 'R', '3')
+    RGB24 = _fourcc('R', 'G', 'B', '3')
+    BGR32 = _fourcc('B', 'G', 'R', '4')
+    ABGR32 = _fourcc('A', 'R', '2', '4')
+    XBGR32 = _fourcc('X', 'R', '2', '4')
+    RGB32 = _fourcc('R', 'G', 'B', '4')
+    ARGB32 = _fourcc('B', 'A', '2', '4')
+    XRGB32 = _fourcc('B', 'X', '2', '4')
+    GREY = _fourcc('G', 'R', 'E', 'Y')
+    Y4 = _fourcc('Y', '0', '4', ' ')
+    Y6 = _fourcc('Y', '0', '6', ' ')
+    Y10 = _fourcc('Y', '1', '0', ' ')
+    Y12 = _fourcc('Y', '1', '2', ' ')
+    Y16 = _fourcc('Y', '1', '6', ' ')
     Y16_BE = _fourcc_be('Y', '1', '6', ' ')
-    Y10BPACK = _fourcc   ('Y', '1', '0', 'B')
+    Y10BPACK = _fourcc('Y', '1', '0', 'B')
     PAL8 = _fourcc('P', 'A', 'L', '8')
     UV8 = _fourcc('U', 'V', '8', ' ')
     YUYV = _fourcc('Y', 'U', 'Y', 'V')
@@ -267,57 +289,65 @@ class V4L2_PIX_FMT(enum.IntEnum):
     Y12I = _fourcc('Y', '1', '2', 'I')
     Z16 = _fourcc('Z', '1', '6', ' ')
 
+
 class V4L2_BUF_TYPE(enum.IntEnum):
-    VIDEO_CAPTURE        =  1
-    VIDEO_OUTPUT         =  2
-    VIDEO_OVERLAY        =  3
-    VBI_CAPTURE          =  4
-    VBI_OUTPUT           =  5
-    SLICED_VBI_CAPTURE   =  6
-    SLICED_VBI_OUTPUT    =  7
-    VIDEO_OUTPUT_OVERLAY =  8
-    VIDEO_CAPTURE_MPLANE =  9
-    VIDEO_OUTPUT_MPLANE  = 10
-    SDR_CAPTURE          = 11
-    SDR_OUTPUT           = 12
-    PRIVATE              = 0x80
+    VIDEO_CAPTURE = 1
+    VIDEO_OUTPUT = 2
+    VIDEO_OVERLAY = 3
+    VBI_CAPTURE = 4
+    VBI_OUTPUT = 5
+    SLICED_VBI_CAPTURE = 6
+    SLICED_VBI_OUTPUT = 7
+    VIDEO_OUTPUT_OVERLAY = 8
+    VIDEO_CAPTURE_MPLANE = 9
+    VIDEO_OUTPUT_MPLANE = 10
+    SDR_CAPTURE = 11
+    SDR_OUTPUT = 12
+    PRIVATE = 0x80
+
 
 class V4L2_FRMSIZE_TYPE(enum.IntEnum):
-    DISCRETE      = 1
-    CONTINUOUS    = 2
-    STEPWISE      = 3
+    DISCRETE = 1
+    CONTINUOUS = 2
+    STEPWISE = 3
+
 
 class V4L2_FRMIVAL_TYPE(enum.IntEnum):
-    DISCRETE      = 1
-    CONTINUOUS    = 2
-    STEPWISE      = 3
+    DISCRETE = 1
+    CONTINUOUS = 2
+    STEPWISE = 3
+
 
 class V4L2_FIELD(enum.IntEnum):
-    ANY           = 0
-    NONE          = 1
-    TOP           = 2
-    BOTTOM        = 3
-    INTERLACED    = 4
-    SEQ_TB        = 5
-    SEQ_BT        = 6
-    ALTERNATE     = 7
+    ANY = 0
+    NONE = 1
+    TOP = 2
+    BOTTOM = 3
+    INTERLACED = 4
+    SEQ_TB = 5
+    SEQ_BT = 6
+    ALTERNATE = 7
     INTERLACED_TB = 8
     INTERLACED_BT = 9
+
 
 V4L2_MODE_HIGHQUALITY = 0x0001
 V4L2_CAP_TIMEPERFRAME = 0x1000
 
+
 class V4L2_MEMORY(enum.IntEnum):
-    MMAP    = 1
+    MMAP = 1
     USERPTR = 2
     OVERLAY = 3
-    DMABUF  = 4
+    DMABUF = 4
+
 
 VideoPort = enum.Enum('VideoPort', 'CSI USB')
 
+
 class VideoConfig(object):
 
-    def __init__(self, width = 640, height = 480, pixel_format = V4L2_PIX_FMT.RGB24, framerate = 30):
+    def __init__(self, width=640, height=480, pixel_format=V4L2_PIX_FMT.RGB24, framerate=30):
         self.pixel_format = pixel_format
         self.width = width
         self.height = height
@@ -325,9 +355,10 @@ class VideoConfig(object):
         self.interval.numerator = 1
         self.interval.denominator = framerate
 
+
 class Video(object):
 
-    def __init__(self, device = '/dev/video0', blocking = False):
+    def __init__(self, device='/dev/video0', blocking=False):
         self.device = device
         flags = os.O_RDWR
         if not blocking:
@@ -359,7 +390,7 @@ class Video(object):
             raise RuntimeError("The device doesn't support the single-planar API through the Video Capture interface.")
         if not (cap.capabilities & _V4L2_CAP_STREAMING):
             raise RuntimeError("The device doesn't support the streaming I/O method.")
-        driver = ''.join(map(chr, itertools.takewhile(lambda x: x>0, cap.driver)))
+        driver = ''.join(map(chr, itertools.takewhile(lambda x: x > 0, cap.driver)))
         if driver == 'bm2835 mmal':
             return VideoPort.CSI
         elif driver[:len('uvcvideo')] == 'uvcvideo':
@@ -423,8 +454,10 @@ class Video(object):
                 elif frmsize.type == V4L2_FRMSIZE_TYPE.STEPWISE:
                     if frmsize.stepwise.min_width <= width and width <= frmsize.stepwise.max_width and \
                        frmsize.stepwise.min_height <= height and height <= frmsize.stepwise.max_height:
-                        candidate.width = (width - frmsize.stepwise.min_width + frmsize.stepwise.step_width - 1) // frmsize.stepwise.step_width * frmsize.stepwise.step_width + frmsize.stepwise.min_width
-                        candidate.height = (height - frmsize.stepwise.min_height + frmsize.stepwise.step_height - 1) // frmsize.stepwise.step_height * frmsize.stepwise.step_height + frmsize.stepwise.min_height
+                        candidate.width = (width - frmsize.stepwise.min_width + frmsize.stepwise.step_width -
+                                           1) // frmsize.stepwise.step_width * frmsize.stepwise.step_width + frmsize.stepwise.min_width
+                        candidate.height = (height - frmsize.stepwise.min_height + frmsize.stepwise.step_height -
+                                            1) // frmsize.stepwise.step_height * frmsize.stepwise.step_height + frmsize.stepwise.min_height
                     else:
                         continue
                 else:
@@ -485,7 +518,7 @@ class Video(object):
 
         return results
 
-    def set_format(self, conf, expected_width = None, expected_height = None, expected_fmt = None):
+    def set_format(self, conf, expected_width=None, expected_height=None, expected_fmt=None):
 
         if expected_width is None:
             expected_width = conf.width
@@ -496,17 +529,17 @@ class Video(object):
 
         self.fmt = format()
         self.fmt.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
-        self.fmt.fmt.pix.width       = conf.width
-        self.fmt.fmt.pix.height      = conf.height
+        self.fmt.fmt.pix.width = conf.width
+        self.fmt.fmt.pix.height = conf.height
         self.fmt.fmt.pix.pixelformat = conf.pixel_format
-        self.fmt.fmt.pix.field       = V4L2_FIELD.INTERLACED
+        self.fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
 
         self.expected_fmt = format()
         self.expected_fmt.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
-        self.expected_fmt.fmt.pix.width       = expected_width
-        self.expected_fmt.fmt.pix.height      = expected_height
+        self.expected_fmt.fmt.pix.width = expected_width
+        self.expected_fmt.fmt.pix.height = expected_height
         self.expected_fmt.fmt.pix.pixelformat = expected_fmt
-        self.expected_fmt.fmt.pix.field       = V4L2_FIELD.INTERLACED
+        self.expected_fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
 
         result = _v4lconvert.try_format(self.converter, byref(self.expected_fmt), byref(self.fmt))
         if -1 == result:
@@ -534,7 +567,7 @@ class Video(object):
     def set_rotation(self, rotation):
 
         assert rotation % 90 == 0, 'rotation must be multiples of 90'
-        rot = (rotation // 90) % 4 * 90 # [0, 90, 180, 270]
+        rot = (rotation // 90) % 4 * 90  # [0, 90, 180, 270]
 
         cntl = control()
         cntl.id = V4L2_CID.ROTATE
@@ -585,7 +618,7 @@ class Video(object):
 
         return True
 
-    def dequeue_buffer(self, timeout = 1):
+    def dequeue_buffer(self, timeout=1):
 
         class FDWrapper:
 
@@ -595,12 +628,12 @@ class Video(object):
             def fileno(self):
                 return self.fd
 
-        rlist, _, _ = select.select([FDWrapper(self.device_fd)],[],[],timeout)
+        rlist, _, _ = select.select([FDWrapper(self.device_fd)], [], [], timeout)
         if len(rlist) == 0:
             raise RuntimeError("Capture timeout")
 
         buf = buffer()
-        buf.type   = V4L2_BUF_TYPE.VIDEO_CAPTURE
+        buf.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
         buf.memory = V4L2_MEMORY.MMAP
         result = self._ioctl(_VIDIOC.DQBUF, byref(buf))
         if -1 == result:
@@ -614,6 +647,7 @@ class Video(object):
         if -1 == result:
             raise RuntimeError("ioctl(VIDIOC_QBUF): {}".format(errno.errorcode[get_errno()]))
 
+
 class VideoStream(object):
 
     def __init__(self, video):
@@ -625,7 +659,7 @@ class VideoStream(object):
     def __exit__(self, ex_type, ex_value, trace):
         self.video.stop_streaming()
 
-    def capture(self, timeout = 1, in_expected_format = True):
+    def capture(self, timeout=1, in_expected_format=True):
 
         buf = self.video.dequeue_buffer(timeout=timeout)
         mapped_buf = buf.get_mapped_buffer()
@@ -648,15 +682,16 @@ class VideoStream(object):
 
         return dst
 
+
 class VideoBuffer(object):
 
     @classmethod
     def _from_query(cls, video, index):
 
         buf = buffer()
-        buf.type   = V4L2_BUF_TYPE.VIDEO_CAPTURE
+        buf.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
         buf.memory = V4L2_MEMORY.MMAP
-        buf.index  = index
+        buf.index = index
 
         set_errno(0)
         result = video._ioctl(_VIDIOC.QUERYBUF, byref(buf))
@@ -675,7 +710,7 @@ class VideoBuffer(object):
             return self.mapped_buf
         result = _v4l2.mmap(None, self.buf.length,
                             mmap.PROT_READ | mmap.PROT_WRITE, mmap.MAP_SHARED,
-                            self.video.device_fd, c_longlong(self.buf.m.offset));
+                            self.video.device_fd, c_longlong(self.buf.m.offset))
         if result == -1:
             raise RuntimeError("mmap failed: {}".format(errno.errorcode[get_errno()]))
         self.mapped_buf = cast(result, POINTER(ARRAY(c_uint8, self.buf.length)))

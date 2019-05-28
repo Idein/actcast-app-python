@@ -1,18 +1,20 @@
 import enum
 
+
 class V4L2_CTRL_CLASS(enum.IntEnum):
-    USER         = 0x00980000
-    MPEG         = 0x00990000
-    CAMERA       = 0x009a0000
-    FM_TX        = 0x009b0000
-    FLASH        = 0x009c0000
-    JPEG         = 0x009d0000
+    USER = 0x00980000
+    MPEG = 0x00990000
+    CAMERA = 0x009a0000
+    FM_TX = 0x009b0000
+    FLASH = 0x009c0000
+    JPEG = 0x009d0000
     IMAGE_SOURCE = 0x009e0000
-    IMAGE_PROC   = 0x009f0000
-    DV           = 0x00a00000
-    FM_RX        = 0x00a10000
-    RF_TUNER     = 0x00a20000
-    DETECT       = 0x00a30000
+    IMAGE_PROC = 0x009f0000
+    DV = 0x00a00000
+    FM_RX = 0x00a10000
+    RF_TUNER = 0x00a20000
+    DETECT = 0x00a30000
+
 
 class V4L2_CID(enum.IntEnum):
     BASE = (V4L2_CTRL_CLASS.USER | 0x900)
@@ -400,58 +402,65 @@ class V4L2_CID(enum.IntEnum):
     DETECT_MD_THRESHOLD_GRID = (DETECT_CLASS_BASE + 3)
     DETECT_MD_REGION_GRID = (DETECT_CLASS_BASE + 4)
 
+
 class V4L2_POWER_LINE(enum.IntEnum):
     FREQUENCY_DISABLED = 0
-    FREQUENCY_50HZ     = 1
-    FREQUENCY_60HZ     = 2
-    FREQUENCY_AUTO     = 3
+    FREQUENCY_50HZ = 1
+    FREQUENCY_60HZ = 2
+    FREQUENCY_AUTO = 3
+
 
 class V4L2_COLORFX(enum.IntEnum):
-    NONE         = 0
-    BW           = 1
-    SEPIA        = 2
-    NEGATIVE     = 3
-    EMBOSS       = 4
-    SKETCH       = 5
-    SKY_BLUE     = 6
-    GRASS_GREEN  = 7
-    SKIN_WHITEN  = 8
-    VIVID        = 9
-    AQUA         = 10
-    ART_FREEZE   = 11
-    SILHOUETTE   = 12
+    NONE = 0
+    BW = 1
+    SEPIA = 2
+    NEGATIVE = 3
+    EMBOSS = 4
+    SKETCH = 5
+    SKY_BLUE = 6
+    GRASS_GREEN = 7
+    SKIN_WHITEN = 8
+    VIVID = 9
+    AQUA = 10
+    ART_FREEZE = 11
+    SILHOUETTE = 12
     SOLARIZATION = 13
-    ANTIQUE      = 14
-    SET_CBCR     = 15
+    ANTIQUE = 14
+    SET_CBCR = 15
+
 
 class V4L2_MPEG_STREAM_TYPE(enum.IntEnum):
-    MPEG2_PS   = 0
-    MPEG2_TS   = 1
-    MPEG1_SS   = 2
-    MPEG2_DVD  = 3
-    MPEG1_VCD  = 4
+    MPEG2_PS = 0
+    MPEG2_TS = 1
+    MPEG1_SS = 2
+    MPEG2_DVD = 3
+    MPEG1_VCD = 4
     MPEG2_SVCD = 5
+
 
 class V4L2_MPEG_STREAM_VBI_FMT(enum.IntEnum):
     NONE = 0
     IVTV = 1
+
 
 class V4L2_MPEG_AUDIO_SAMPLING(enum.IntEnum):
     FREQ_44100 = 0
     FREQ_48000 = 1
     FREQ_32000 = 2
 
+
 class V4L2_MPEG_AUDIO_ENCODING(enum.IntEnum):
     LAYER_1 = 0
     LAYER_2 = 1
     LAYER_3 = 2
-    AAC     = 3
-    AC3     = 4
+    AAC = 3
+    AC3 = 4
+
 
 class V4L2_MPEG_AUDIO_L1(enum.IntEnum):
-    BITRATE_32K  = 0
-    BITRATE_64K  = 1
-    BITRATE_96K  = 2
+    BITRATE_32K = 0
+    BITRATE_64K = 1
+    BITRATE_96K = 2
     BITRATE_128K = 3
     BITRATE_160K = 4
     BITRATE_192K = 5
@@ -464,13 +473,14 @@ class V4L2_MPEG_AUDIO_L1(enum.IntEnum):
     BITRATE_416K = 12
     BITRATE_448K = 13
 
+
 class V4L2_MPEG_AUDIO_L2(enum.IntEnum):
-    BITRATE_32K  = 0
-    BITRATE_48K  = 1
-    BITRATE_56K  = 2
-    BITRATE_64K  = 3
-    BITRATE_80K  = 4
-    BITRATE_96K  = 5
+    BITRATE_32K = 0
+    BITRATE_48K = 1
+    BITRATE_56K = 2
+    BITRATE_64K = 3
+    BITRATE_80K = 4
+    BITRATE_96K = 5
     BITRATE_112K = 6
     BITRATE_128K = 7
     BITRATE_160K = 8
@@ -480,14 +490,15 @@ class V4L2_MPEG_AUDIO_L2(enum.IntEnum):
     BITRATE_320K = 12
     BITRATE_384K = 13
 
+
 class V4L2_MPEG_AUDIO_L3(enum.IntEnum):
-    BITRATE_32K  = 0
-    BITRATE_40K  = 1
-    BITRATE_48K  = 2
-    BITRATE_56K  = 3
-    BITRATE_64K  = 4
-    BITRATE_80K  = 5
-    BITRATE_96K  = 6
+    BITRATE_32K = 0
+    BITRATE_40K = 1
+    BITRATE_48K = 2
+    BITRATE_56K = 3
+    BITRATE_64K = 4
+    BITRATE_80K = 5
+    BITRATE_96K = 6
     BITRATE_112K = 7
     BITRATE_128K = 8
     BITRATE_160K = 9
@@ -496,35 +507,40 @@ class V4L2_MPEG_AUDIO_L3(enum.IntEnum):
     BITRATE_256K = 12
     BITRATE_320K = 13
 
+
 class V4L2_MPEG_AUDIO_MODE(enum.IntEnum):
-    STEREO       = 0
+    STEREO = 0
     JOINT_STEREO = 1
-    DUAL         = 2
-    MONO         = 3
+    DUAL = 2
+    MONO = 3
+
 
 class V4L2_MPEG_AUDIO_MODE_EXTENSION(enum.IntEnum):
-    BOUND_4  = 0
-    BOUND_8  = 1
+    BOUND_4 = 0
+    BOUND_8 = 1
     BOUND_12 = 2
     BOUND_16 = 3
 
+
 class V4L2_MPEG_AUDIO(enum.IntEnum):
-    EMPHASIS_NONE         = 0
+    EMPHASIS_NONE = 0
     EMPHASIS_50_DIV_15_uS = 1
-    EMPHASIS_CCITT_J17    = 2
+    EMPHASIS_CCITT_J17 = 2
+
 
 class V4L2_MPEG_AUDIO_CRC(enum.IntEnum):
-    NONE  = 0
+    NONE = 0
     CRC16 = 1
 
+
 class V4L2_MPEG_AUDIO_AC3(enum.IntEnum):
-    BITRATE_32K  = 0
-    BITRATE_40K  = 1
-    BITRATE_48K  = 2
-    BITRATE_56K  = 3
-    BITRATE_64K  = 4
-    BITRATE_80K  = 5
-    BITRATE_96K  = 6
+    BITRATE_32K = 0
+    BITRATE_40K = 1
+    BITRATE_48K = 2
+    BITRATE_56K = 3
+    BITRATE_64K = 4
+    BITRATE_80K = 5
+    BITRATE_96K = 6
     BITRATE_112K = 7
     BITRATE_128K = 8
     BITRATE_160K = 9
@@ -538,45 +554,53 @@ class V4L2_MPEG_AUDIO_AC3(enum.IntEnum):
     BITRATE_576K = 17
     BITRATE_640K = 18
 
-class  V4L2_MPEG_AUDIO_DEC_PLAYBACK(enum.IntEnum):
-    AUTO           = 0
-    STEREO         = 1
-    LEFT           = 2
-    RIGHT          = 3
-    MONO           = 4
+
+class V4L2_MPEG_AUDIO_DEC_PLAYBACK(enum.IntEnum):
+    AUTO = 0
+    STEREO = 1
+    LEFT = 2
+    RIGHT = 3
+    MONO = 4
     SWAPPED_STEREO = 5
 
+
 class V4L2_MPEG_VIDEO_ENCODING(enum.IntEnum):
-    MPEG_1     = 0
-    MPEG_2     = 1
+    MPEG_1 = 0
+    MPEG_2 = 1
     MPEG_4_AVC = 2
 
+
 class V4L2_MPEG_VIDEO(enum.IntEnum):
-    ASPECT_1x1     = 0
-    ASPECT_4x3     = 1
-    ASPECT_16x9    = 2
+    ASPECT_1x1 = 0
+    ASPECT_4x3 = 1
+    ASPECT_16x9 = 2
     ASPECT_221x100 = 3
+
 
 class V4L2_MPEG_VIDEO_BITRATE_MODE(enum.IntEnum):
     VBR = 0
     CBR = 1
 
+
 class V4L2_MPEG_VIDEO_HEADER_MODE(enum.IntEnum):
-    SEPARATE              = 0
+    SEPARATE = 0
     JOINED_WITH_1ST_FRAME = 1
 
+
 class V4L2_MPEG_VIDEO_MULTI_SLICE_MODE(enum.IntEnum):
-    SINGLE    = 0
-    MAX_MB    = 1
+    SINGLE = 0
+    MAX_MB = 1
     MAX_BYTES = 2
+
 
 class V4L2_MPEG_VIDEO_H264_ENTROPY_MODE(enum.IntEnum):
     CAVLC = 0
     CABAC = 1
 
+
 class V4L2_MPEG_VIDEO_H264(enum.IntEnum):
     LEVEL_1_0 = 0
-    LEVEL_1B  = 1
+    LEVEL_1B = 1
     LEVEL_1_1 = 2
     LEVEL_1_2 = 3
     LEVEL_1_3 = 4
@@ -592,91 +616,101 @@ class V4L2_MPEG_VIDEO_H264(enum.IntEnum):
     LEVEL_5_0 = 14
     LEVEL_5_1 = 15
 
+
 class V4L2_MPEG_VIDEO_H264_LOOP_FILTER_MODE(enum.IntEnum):
-    ENABLED                    = 0
-    DISABLED                   = 1
+    ENABLED = 0
+    DISABLED = 1
     DISABLED_AT_SLICE_BOUNDARY = 2
 
+
 class V4L2_MPEG_VIDEO_H264_PROFILE(enum.IntEnum):
-    BASELINE             = 0
+    BASELINE = 0
     CONSTRAINED_BASELINE = 1
-    MAIN                 = 2
-    EXTENDED             = 3
-    HIGH                 = 4
-    HIGH_10              = 5
-    HIGH_422             = 6
-    HIGH_444_PREDICTIVE  = 7
-    HIGH_10_INTRA        = 8
-    HIGH_422_INTRA       = 9
-    HIGH_444_INTRA       = 10
-    CAVLC_444_INTRA      = 11
-    SCALABLE_BASELINE    = 12
-    SCALABLE_HIGH        = 13
-    SCALABLE_HIGH_INTRA  = 14
-    STEREO_HIGH          = 15
-    MULTIVIEW_HIGH       = 16
+    MAIN = 2
+    EXTENDED = 3
+    HIGH = 4
+    HIGH_10 = 5
+    HIGH_422 = 6
+    HIGH_444_PREDICTIVE = 7
+    HIGH_10_INTRA = 8
+    HIGH_422_INTRA = 9
+    HIGH_444_INTRA = 10
+    CAVLC_444_INTRA = 11
+    SCALABLE_BASELINE = 12
+    SCALABLE_HIGH = 13
+    SCALABLE_HIGH_INTRA = 14
+    STEREO_HIGH = 15
+    MULTIVIEW_HIGH = 16
+
 
 class V4L2_MPEG_VIDEO_H264_VUI_SAR(enum.IntEnum):
     IDC_UNSPECIFIED = 0
-    IDC_1x1         = 1
-    IDC_12x11       = 2
-    IDC_10x11       = 3
-    IDC_16x11       = 4
-    IDC_40x33       = 5
-    IDC_24x11       = 6
-    IDC_20x11       = 7
-    IDC_32x11       = 8
-    IDC_80x33       = 9
-    IDC_18x11       = 10
-    IDC_15x11       = 11
-    IDC_64x33       = 12
-    IDC_160x99      = 13
-    IDC_4x3         = 14
-    IDC_3x2         = 15
-    IDC_2x1         = 16
-    IDC_EXTENDED    = 17
+    IDC_1x1 = 1
+    IDC_12x11 = 2
+    IDC_10x11 = 3
+    IDC_16x11 = 4
+    IDC_40x33 = 5
+    IDC_24x11 = 6
+    IDC_20x11 = 7
+    IDC_32x11 = 8
+    IDC_80x33 = 9
+    IDC_18x11 = 10
+    IDC_15x11 = 11
+    IDC_64x33 = 12
+    IDC_160x99 = 13
+    IDC_4x3 = 14
+    IDC_3x2 = 15
+    IDC_2x1 = 16
+    IDC_EXTENDED = 17
+
 
 class V4L2_MPEG_VIDEO_H264_SEI_FP_ARRANGEMENT_TYPE(enum.IntEnum):
     CHECKERBOARD = 0
-    COLUMN       = 1
-    ROW          = 2
+    COLUMN = 1
+    ROW = 2
     SIDE_BY_SIDE = 3
-    TOP_BOTTOM   = 4
-    TEMPORAL     = 5
+    TOP_BOTTOM = 4
+    TEMPORAL = 5
+
 
 class V4L2_MPEG_VIDEO_H264_FMO_MAP_TYPE(enum.IntEnum):
-    INTERLEAVED_SLICES        = 0
-    SCATTERED_SLICES          = 1
+    INTERLEAVED_SLICES = 0
+    SCATTERED_SLICES = 1
     FOREGROUND_WITH_LEFT_OVER = 2
-    BOX_OUT                   = 3
-    RASTER_SCAN               = 4
-    WIPE_SCAN                 = 5
-    EXPLICIT                  = 6
+    BOX_OUT = 3
+    RASTER_SCAN = 4
+    WIPE_SCAN = 5
+    EXPLICIT = 6
+
 
 class V4L2_MPEG_VIDEO_H264_FMO_CHANGE_DIR(enum.IntEnum):
     RIGHT = 0
-    LEFT  = 1
+    LEFT = 1
+
 
 class V4L2_MPEG_VIDEO_H264_HIERARCHICAL_CODING(enum.IntEnum):
     B = 0
     P = 1
 
+
 class V4L2_MPEG_VIDEO_MPEG4(enum.IntEnum):
-    LEVEL_0  = 0
+    LEVEL_0 = 0
     LEVEL_0B = 1
-    LEVEL_1  = 2
-    LEVEL_2  = 3
-    LEVEL_3  = 4
+    LEVEL_1 = 2
+    LEVEL_2 = 3
+    LEVEL_3 = 4
     LEVEL_3B = 5
-    LEVEL_4  = 6
-    LEVEL_5  = 7
+    LEVEL_4 = 6
+    LEVEL_5 = 7
+
 
 class V4L2_MPEG_VIDEO_MPEG4_PROFILE(enum.IntEnum):
-    SIMPLE                     = 0
-    ADVANCED_SIMPLE            = 1
-    CORE                       = 2
-    SIMPLE_SCALABLE            = 3
+    SIMPLE = 0
+    ADVANCED_SIMPLE = 1
+    CORE = 2
+    SIMPLE_SCALABLE = 3
     ADVANCED_CODING_EFFICIENCY = 4
+
 
 class V4L2_MPEG_VIDEO_VPX_PARTITIONS(enum.IntEnum):
     NUM_1 = 0
@@ -684,173 +718,196 @@ class V4L2_MPEG_VIDEO_VPX_PARTITIONS(enum.IntEnum):
     NUM_4 = 2
     NUM_8 = 3
 
+
 class V4L2_MPEG_VIDEO_VPX_REF_FRAME(enum.IntEnum):
     NUM_1 = 0
     NUM_2 = 1
     NUM_3 = 2
 
+
 class V4L2_MPEG_VIDEO_VPX_GOLDEN_FRAME_USE(enum.IntEnum):
-    PREV       = 0
+    PREV = 0
     REF_PERIOD = 1
+
 
 class V4L2_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE(enum.IntEnum):
     MANUAL = 0
-    AUTO   = 1
+    AUTO = 1
+
 
 class V4L2_MPEG_CX2341X_VIDEO_LUMA_SPATIAL_FILTER(enum.IntEnum):
-    TYPE_OFF                  = 0
-    TYPE_1D_HOR               = 1
-    TYPE_1D_VERT              = 2
-    TYPE_2D_HV_SEPARABLE      = 3
+    TYPE_OFF = 0
+    TYPE_1D_HOR = 1
+    TYPE_1D_VERT = 2
+    TYPE_2D_HV_SEPARABLE = 3
     TYPE_2D_SYM_NON_SEPARABLE = 4
 
+
 class V4L2_MPEG_CX2341X_VIDEO_CHROMA_SPATIAL_FILTER(enum.IntEnum):
-    TYPE_OFF    = 0
+    TYPE_OFF = 0
     TYPE_1D_HOR = 1
+
 
 class V4L2_MPEG_CX2341X_VIDEO_TEMPORAL_FILTER_MODE(enum.IntEnum):
     MANUAL = 0
-    AUTO   = 1
+    AUTO = 1
+
 
 class V4L2_MPEG_CX2341X_VIDEO_MEDIAN_FILTER_TYPE(enum.IntEnum):
-    OFF      = 0
-    HOR      = 1
-    VERT     = 2
+    OFF = 0
+    HOR = 1
+    VERT = 2
     HOR_VERT = 3
-    DIAG     = 4
+    DIAG = 4
+
 
 class V4L2_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE(enum.IntEnum):
-    DISABLED  = 0
+    DISABLED = 0
     LEVEL_LIMIT = 1
-    BUF_LIMIT  = 2
+    BUF_LIMIT = 2
+
 
 class V4L2_MPEG_MFC51_VIDEO_FORCE_FRAME_TYPE(enum.IntEnum):
-    DISABLED  = 0
-    I_FRAME   = 1
+    DISABLED = 0
+    I_FRAME = 1
     NOT_CODED = 2
 
+
 class V4L2_EXPOSURE(enum.IntEnum):
-    AUTO              = 0
-    MANUAL            = 1
-    SHUTTER_PRIORITY  = 2
+    AUTO = 0
+    MANUAL = 1
+    SHUTTER_PRIORITY = 2
     APERTURE_PRIORITY = 3
 
+
 class V4L2_WHITE_BALANCE(enum.IntEnum):
-    MANUAL        = 0
-    AUTO          = 1
-    INCANDESCENT  = 2
-    FLUORESCENT   = 3
+    MANUAL = 0
+    AUTO = 1
+    INCANDESCENT = 2
+    FLUORESCENT = 3
     FLUORESCENT_H = 4
-    HORIZON       = 5
-    DAYLIGHT      = 6
-    FLASH         = 7
-    CLOUDY        = 8
-    SHADE         = 9
+    HORIZON = 5
+    DAYLIGHT = 6
+    FLASH = 7
+    CLOUDY = 8
+    SHADE = 9
+
 
 class V4L2_ISO_SENSITIVITY(enum.IntEnum):
     MANUAL = 0
-    AUTO   = 1
+    AUTO = 1
 
 
 class V4L2_EXPOSURE_METERING(enum.IntEnum):
-    AVERAGE         = 0
+    AVERAGE = 0
     CENTER_WEIGHTED = 1
-    SPOT            = 2
-    MATRIX          = 3
+    SPOT = 2
+    MATRIX = 3
 
 
 class V4L2_SCENE_MODE(enum.IntEnum):
-    NONE         = 0
-    BACKLIGHT    = 1
-    BEACH_SNOW   = 2
+    NONE = 0
+    BACKLIGHT = 1
+    BEACH_SNOW = 2
     CANDLE_LIGHT = 3
-    DAWN_DUSK    = 4
-    FALL_COLORS  = 5
-    FIREWORKS    = 6
-    LANDSCAPE    = 7
-    NIGHT        = 8
+    DAWN_DUSK = 4
+    FALL_COLORS = 5
+    FIREWORKS = 6
+    LANDSCAPE = 7
+    NIGHT = 8
     PARTY_INDOOR = 9
-    PORTRAIT     = 10
-    SPORTS       = 11
-    SUNSET       = 12
-    TEXT         = 13
+    PORTRAIT = 10
+    SPORTS = 11
+    SUNSET = 12
+    TEXT = 13
+
 
 class V4L2_AUTO_FOCUS_RANGE(enum.IntEnum):
-    AUTO     = 0
-    NORMAL   = 1
-    MACRO    = 2
+    AUTO = 0
+    NORMAL = 1
+    MACRO = 2
     INFINITY = 3
 
+
 class V4L2_PREEMPHASIS(enum.IntEnum):
-    DISABLED   = 0
+    DISABLED = 0
     TUNE_50_uS = 1
     TUNE_75_uS = 2
 
+
 class V4L2_FLASH_LED_MODE(enum.IntEnum):
-    NONE  = 0
+    NONE = 0
     FLASH = 1
     TORCH = 2
+
 
 class V4L2_FLASH_STROBE_SOURCE(enum.IntEnum):
     SOFTWARE = 0
     EXTERNAL = 1
 
+
 class V4L2_JPEG_CHROMA(enum.IntEnum):
-    SUBSAMPLING_444  = 0
-    SUBSAMPLING_422  = 1
-    SUBSAMPLING_420  = 2
-    SUBSAMPLING_411  = 3
-    SUBSAMPLING_410  = 4
+    SUBSAMPLING_444 = 0
+    SUBSAMPLING_422 = 1
+    SUBSAMPLING_420 = 2
+    SUBSAMPLING_411 = 3
+    SUBSAMPLING_410 = 4
     SUBSAMPLING_GRAY = 5
+
 
 class V4L2_DV_TX_MODE(enum.IntEnum):
     DVI_D = 0
-    HDMI  = 1
+    HDMI = 1
+
 
 class V4L2_DV_RGB_RANGE(enum.IntEnum):
-    AUTO    = 0
+    AUTO = 0
     LIMITED = 1
-    FULL    = 2
+    FULL = 2
+
 
 class V4L2_DV_IT_CONTENT_TYPE(enum.IntEnum):
     GRAPHICS = 0
-    PHOTO    = 1
-    CINEMA   = 2
-    GAME     = 3
-    NO_ITC   = 4
+    PHOTO = 1
+    CINEMA = 2
+    GAME = 3
+    NO_ITC = 4
+
 
 class V4L2_DEEMPHASIS(enum.IntEnum):
-    DISABLED   = V4L2_PREEMPHASIS.DISABLED
+    DISABLED = V4L2_PREEMPHASIS.DISABLED
     TUNE_50_uS = V4L2_PREEMPHASIS.TUNE_50_uS
     TUNE_75_uS = V4L2_PREEMPHASIS.TUNE_75_uS
 
+
 class V4L2_DETECT_MD_MODE(enum.IntEnum):
-    DISABLED       = 0
-    GLOBAL         = 1
+    DISABLED = 0
+    GLOBAL = 1
     THRESHOLD_GRID = 2
-    REGION_GRID    = 3
+    REGION_GRID = 3
 
-V4L2_LOCK_EXPOSURE      = (1 << 0)
+
+V4L2_LOCK_EXPOSURE = (1 << 0)
 V4L2_LOCK_WHITE_BALANCE = (1 << 1)
-V4L2_LOCK_FOCUS         = (1 << 2)
+V4L2_LOCK_FOCUS = (1 << 2)
 
-V4L2_AUTO_FOCUS_STATUS_IDLE           = (0 << 0)
-V4L2_AUTO_FOCUS_STATUS_BUSY           = (1 << 0)
-V4L2_AUTO_FOCUS_STATUS_REACHED        = (1 << 1)
-V4L2_AUTO_FOCUS_STATUS_FAILED         = (1 << 2)
+V4L2_AUTO_FOCUS_STATUS_IDLE = (0 << 0)
+V4L2_AUTO_FOCUS_STATUS_BUSY = (1 << 0)
+V4L2_AUTO_FOCUS_STATUS_REACHED = (1 << 1)
+V4L2_AUTO_FOCUS_STATUS_FAILED = (1 << 2)
 
-V4L2_FLASH_FAULT_OVER_VOLTAGE         = (1 << 0)
-V4L2_FLASH_FAULT_TIMEOUT              = (1 << 1)
-V4L2_FLASH_FAULT_OVER_TEMPERATURE     = (1 << 2)
-V4L2_FLASH_FAULT_SHORT_CIRCUIT        = (1 << 3)
-V4L2_FLASH_FAULT_OVER_CURRENT         = (1 << 4)
-V4L2_FLASH_FAULT_INDICATOR            = (1 << 5)
-V4L2_FLASH_FAULT_UNDER_VOLTAGE        = (1 << 6)
-V4L2_FLASH_FAULT_INPUT_VOLTAGE        = (1 << 7)
+V4L2_FLASH_FAULT_OVER_VOLTAGE = (1 << 0)
+V4L2_FLASH_FAULT_TIMEOUT = (1 << 1)
+V4L2_FLASH_FAULT_OVER_TEMPERATURE = (1 << 2)
+V4L2_FLASH_FAULT_SHORT_CIRCUIT = (1 << 3)
+V4L2_FLASH_FAULT_OVER_CURRENT = (1 << 4)
+V4L2_FLASH_FAULT_INDICATOR = (1 << 5)
+V4L2_FLASH_FAULT_UNDER_VOLTAGE = (1 << 6)
+V4L2_FLASH_FAULT_INPUT_VOLTAGE = (1 << 7)
 V4L2_FLASH_FAULT_LED_OVER_TEMPERATURE = (1 << 8)
 
 V4L2_JPEG_ACTIVE_MARKER_APP0 = (1 << 0)
 V4L2_JPEG_ACTIVE_MARKER_APP1 = (1 << 1)
-V4L2_JPEG_ACTIVE_MARKER_COM  = (1 << 16)
-V4L2_JPEG_ACTIVE_MARKER_DQT  = (1 << 17)
-V4L2_JPEG_ACTIVE_MARKER_DHT  = (1 << 18)
+V4L2_JPEG_ACTIVE_MARKER_COM = (1 << 16)
+V4L2_JPEG_ACTIVE_MARKER_DQT = (1 << 17)
+V4L2_JPEG_ACTIVE_MARKER_DHT = (1 << 18)

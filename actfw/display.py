@@ -1,5 +1,6 @@
 from .edid import EDID
 
+
 class Display:
 
     def __init__(self, camera, size):
