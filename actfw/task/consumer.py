@@ -1,5 +1,6 @@
 from .pipe import Pipe
 
+
 class Consumer(Pipe):
 
     def __init__(self):

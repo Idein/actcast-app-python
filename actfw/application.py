@@ -1,5 +1,9 @@
-import os, signal, time, json
+import os
+import signal
+import time
+import json
 from actfw.task import Task
+
 
 class Application:
 

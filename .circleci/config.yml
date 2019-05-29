@@ -9,11 +9,24 @@ jobs:
           name: Install python dev tools
           command: |
             apt-get update
-            apt-get install -y ca-certificates python3-wheel python3-setuptools
+            apt-get install -y ca-certificates python3-wheel python3-setuptools python3-pip
+            pip3 install autopep8
+      - run:
+          name: Check code format
+          command: |
+            [ $(autopep8 --diff --max-line-length 128 -r . | wc -l) = 0 ]
+      - run:
+          name: Make wheel
+          command: |
             python3 setup.py bdist_wheel
+      - run:
+          name: Put artifacts
+          command: |
+            mkdir /root/artifacts
+            mv /root/project/dist/*.whl /root/artifacts/
       - store_artifacts:
-          path: /root/project/dist/actfw-1.0.1-py3-none-any.whl
-          destination: actfw-1.0.1-py3-none-any.whl
+          path: /root/artifacts
+          destination: artifacts
 
 workflows:
   version: 2

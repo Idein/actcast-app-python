@@ -5,8 +5,9 @@ from picamera import PiCamera
 import actfw
 from actfw.task import Pipe, Consumer
 
-(CAPTURE_WIDTH, CAPTURE_HEIGHT) = (320, 240) # capture image size
-(DISPLAY_WIDTH, DISPLAY_HEIGHT) = (640, 480) # display area size
+(CAPTURE_WIDTH, CAPTURE_HEIGHT) = (320, 240)  # capture image size
+(DISPLAY_WIDTH, DISPLAY_HEIGHT) = (640, 480)  # display area size
+
 
 class Converter(Pipe):
 
@@ -17,6 +18,7 @@ class Converter(Pipe):
         rgb_image = Image.frombuffer('RGB', (CAPTURE_WIDTH, CAPTURE_HEIGHT), frame.getvalue(), 'raw', 'RGB')
         gray_image = rgb_image.convert('L')
         return (rgb_image, gray_image)
+
 
 class Presenter(Consumer):
 
@@ -30,12 +32,14 @@ class Presenter(Consumer):
 
     def proc(self, images):
         rgb_image, gray_image = images
-        self.cmd.update_image(rgb_image) # update `Take Photo` image
-        actfw.notify([{'test':True}])
+        self.cmd.update_image(rgb_image)  # update `Take Photo` image
+        actfw.notify([{'test': True}])
         actfw.heartbeat()
         if self.settings['display']:
             gray_image = gray_image.convert('RGB')
-            self.display.update((0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT), gray_image.tobytes(), (CAPTURE_WIDTH, CAPTURE_HEIGHT), 'rgb')
+            self.display.update((0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT), gray_image.tobytes(),
+                                (CAPTURE_WIDTH, CAPTURE_HEIGHT), 'rgb')
+
 
 def main(args):
 
@@ -68,11 +72,12 @@ def main(args):
 
     # Make task connection
     cap.connect(conv)  # from `cap` to `conv`
-    conv.connect(pres) # from `conv` to `pres`
+    conv.connect(pres)  # from `conv` to `pres`
 
     # Start application
     app.run()
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='example: Convertion to grayscale image')
     main(parser.parse_args())

@@ -1,5 +1,6 @@
 from ctypes import *
 
+
 class capability(Structure):
     _fields_ = [
         ('driver', c_ubyte * 16),
@@ -11,6 +12,7 @@ class capability(Structure):
         ('reserved', c_uint * 3),
     ]
 
+
 class fmtdesc(Structure):
     _fields_ = [
         ('index', c_uint),
@@ -21,11 +23,13 @@ class fmtdesc(Structure):
         ('reserved', c_uint * 4),
     ]
 
+
 class frmsize_discrete(Structure):
     _fields_ = [
         ('width', c_uint),
         ('height', c_uint),
     ]
+
 
 class frmsize_stepwise(Structure):
     _fields_ = [
@@ -37,11 +41,13 @@ class frmsize_stepwise(Structure):
         ('step_height', c_uint),
     ]
 
+
 class _frmsize_for_frmsizeenum(Union):
     _fields_ = [
         ('discrete', frmsize_discrete),
         ('stepwise', frmsize_stepwise),
     ]
+
 
 class frmsizeenum(Structure):
     _anonymous_ = (
@@ -55,11 +61,13 @@ class frmsizeenum(Structure):
         ('reserved', c_uint * 2),
     ]
 
+
 class fract(Structure):
     _fields_ = [
         ('numerator', c_uint),
         ('denominator', c_uint),
     ]
+
 
 class frmival_stepwise(Structure):
     _fields_ = [
@@ -68,11 +76,13 @@ class frmival_stepwise(Structure):
         ('step', fract),
     ]
 
+
 class _frmival_for_frmivalenum(Union):
     _fields_ = [
         ('discrete', fract),
         ('stepwise', frmival_stepwise),
     ]
+
 
 class frmivalenum(Structure):
     _anonymous_ = (
@@ -105,12 +115,15 @@ class pix_format(Structure):
         ('xfer_func', c_uint),
     ]
 
+
 class plane_pix_format(Structure):
     _fields_ = [
         ('sizeimage', c_uint),
         ('bytesperline', c_uint),
         ('reserved', c_ushort * 6),
     ]
+
+
 class pix_format_mplane(Structure):
     _fields_ = [
         ('width', c_uint),
@@ -118,7 +131,7 @@ class pix_format_mplane(Structure):
         ('pixelformat', c_uint),
         ('field', c_uint),
         ('colorspace', c_uint),
-        ('plane_fmt', plane_pix_format * 8), # VIDEO_MAX_PLANES
+        ('plane_fmt', plane_pix_format * 8),  # VIDEO_MAX_PLANES
         ('num_planes', c_ubyte),
         ('flags', c_ubyte),
         ('ycbcr_enc', c_ubyte),
@@ -126,6 +139,7 @@ class pix_format_mplane(Structure):
         ('xfer_func', c_ubyte),
         ('reserved', c_ubyte * 7),
     ]
+
 
 class rect(Structure):
     _fields_ = [
@@ -135,11 +149,16 @@ class rect(Structure):
         ('height', c_uint),
     ]
 
-class clip(Structure): pass
+
+class clip(Structure):
+    pass
+
+
 clip._fields_ = [
     ('c', rect),
     ('next', POINTER(clip)),
 ]
+
 
 class window(Structure):
     _fields_ = [
@@ -151,6 +170,7 @@ class window(Structure):
         ('bitmap', c_void_p),
         ('global_alpha', c_ubyte),
     ]
+
 
 class vbi_format(Structure):
     _fields_ = [
@@ -164,6 +184,7 @@ class vbi_format(Structure):
         ('reserved', c_uint * 2),
     ]
 
+
 class sliced_vbi_format(Structure):
     _fields_ = [
         ('service_lines', 2 * (24 * c_ushort)),
@@ -171,12 +192,14 @@ class sliced_vbi_format(Structure):
         ('reserved', c_uint * 2),
     ]
 
+
 class sdr_format(Structure):
     _fields_ = [
         ('pixelformat', c_uint),
         ('buffersize', c_uint),
         ('reserved', c_ubyte * 24),
     ]
+
 
 class _fmt_for_format(Union):
     _fields_ = [
@@ -189,11 +212,13 @@ class _fmt_for_format(Union):
         ('raw_data', c_ubyte * 200),
     ]
 
+
 class format(Structure):
     _fields_ = [
         ('type', c_uint),
         ('fmt', _fmt_for_format),
     ]
+
 
 class captureparm(Structure):
     _fields_ = [
@@ -205,6 +230,7 @@ class captureparm(Structure):
         ('reserved', c_uint * 4),
     ]
 
+
 class outputparm(Structure):
     _fields_ = [
         ('capability', c_uint),
@@ -215,6 +241,7 @@ class outputparm(Structure):
         ('reserved', c_uint * 4),
     ]
 
+
 class _parm_for_streamparm(Union):
     _fields_ = [
         ('capture', captureparm),
@@ -222,17 +249,20 @@ class _parm_for_streamparm(Union):
         ('raw_data', c_ubyte * 200),
     ]
 
+
 class streamparm(Structure):
     _fields_ = [
         ('type', c_uint),
         ('parm', _parm_for_streamparm),
     ]
 
+
 class control(Structure):
     _fields_ = [
         ('id', c_uint),
         ('value', c_int),
     ]
+
 
 class requestbuffers(Structure):
     _fields_ = [
@@ -242,11 +272,13 @@ class requestbuffers(Structure):
         ('reserved', c_uint * 2),
     ]
 
+
 class timeval(Structure):
     _fields_ = [
         ('sec', c_long),
         ('usec', c_long),
     ]
+
 
 class timecode(Structure):
     _fields_ = [
@@ -259,12 +291,14 @@ class timecode(Structure):
         ('userbits', c_ubyte * 4),
     ]
 
+
 class _m_for_plane(Union):
     _fields_ = [
         ('mem_offset', c_uint),
         ('userptr', c_ulong),
         ('fd', c_int),
     ]
+
 
 class plane(Structure):
     _fields_ = [
@@ -275,6 +309,7 @@ class plane(Structure):
         ('reserved', c_uint * 11),
     ]
 
+
 class _m_for_buffer(Union):
     _fields_ = [
         ('offset', c_uint),
@@ -282,6 +317,7 @@ class _m_for_buffer(Union):
         ('planes', POINTER(plane)),
         ('fd', c_int),
     ]
+
 
 class buffer(Structure):
     _fields_ = [
