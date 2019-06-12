@@ -38,14 +38,14 @@ class Presenter(Consumer):
         rgb_image, codes = images
         self.cmd.update_image(rgb_image)  # update `Take Photo` image
         if codes is not None:
-            codes = [ code.decode('utf-8') for code in codes ]
+            codes = [code.decode('utf-8') for code in codes]
             for code in codes:
                 if code not in self.history:
                     actfw.notify([{'codes': codes}])
                 self.history[code] = 300
         else:
             codes = []
-        self.history = dict([(k,v-1) for k,v in self.history.items() if v > 0])
+        self.history = dict([(k, v-1) for k, v in self.history.items() if v > 0])
         actfw.heartbeat()
         if self.settings['display']:
             self.display.update((0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT), rgb_image.tobytes(),
