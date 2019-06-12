@@ -18,8 +18,7 @@ class Converter(Pipe):
 
     def proc(self, frame):
         rgb_image = Image.frombuffer('RGB', (CAPTURE_WIDTH, CAPTURE_HEIGHT), frame.getvalue(), 'raw', 'RGB')
-        gray_image = rgb_image.convert('L')
-        codes = fastzbarlight.scan_codes('qrcode', gray_image)
+        codes = fastzbarlight.scan_codes('qrcode', rgb_image)
         return (rgb_image, codes)
 
 
