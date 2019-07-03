@@ -54,7 +54,7 @@ class Pipe(Task):
         return False
 
     def run(self):
-        """Run activity"""
+        """Run and start the activity"""
         for i in self._inlet():
             o = self.proc(i)
             self._outlet(o)
@@ -65,7 +65,7 @@ class Pipe(Task):
         raise NotImplementedError("'proc' must be overridden.")
 
     def stop(self):
-        """Stop activity"""
+        """Stop the activity"""
         self.running = False
 
     def connect(self, follow):

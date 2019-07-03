@@ -53,7 +53,7 @@ class CommandServer(Isolated):
         self.img = None
 
     def run(self):
-        """Run activity"""
+        """Run and start the activity"""
         if self.sock_path is None:
             return
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -106,5 +106,5 @@ class CommandServer(Isolated):
             self.img = image.copy()
 
     def stop(self):
-        """Stop activity"""
+        """Stop the activity"""
         self.running = False
