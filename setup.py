@@ -10,8 +10,8 @@ exec(open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'actfw', '_ve
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-name='actfw'
-author='Idein Inc.'
+name = 'actfw'
+author = 'Idein Inc.'
 
 setup(
     name=name,
