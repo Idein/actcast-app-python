@@ -7,7 +7,7 @@ import traceback
 from .task import Isolated
 
 
-def read_tokens(conn, n):
+def _read_tokens(conn, n):
     result = []
     s = b''
     x = n
@@ -22,7 +22,7 @@ def read_tokens(conn, n):
     return result
 
 
-def read_bytes(conn, n):
+def _read_bytes(conn, n):
     result = b''
     while len(result) < n:
         result += conn.recv(1024)
@@ -30,6 +30,15 @@ def read_bytes(conn, n):
 
 
 class CommandServer(Isolated):
+
+    """Actcast Command Server
+
+    This server handles these commands
+
+    * 'Take Photo'
+        * responses cached image as png data
+
+    """
 
     def __init__(self, sock_path=None):
         super(CommandServer, self).__init__()
@@ -44,6 +53,7 @@ class CommandServer(Isolated):
         self.img = None
 
     def run(self):
+        """Run activity"""
         if self.sock_path is None:
             return
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -64,8 +74,8 @@ class CommandServer(Isolated):
                         break
             try:
                 conn, addr = s.accept()
-                [request_id, command_id, command_data_length] = map(int, read_tokens(conn, 3))
-                command_data = read_bytes(conn, command_data_length)
+                [request_id, command_id, command_data_length] = map(int, _read_tokens(conn, 3))
+                command_data = _read_bytes(conn, command_data_length)
                 if command_id == 0:  # Take Photo
                     header = "data:image/png;base64,"
                     with self.img_lock:
@@ -84,8 +94,17 @@ class CommandServer(Isolated):
         os.remove(self.sock_path)
 
     def update_image(self, image):
+        """
+
+        Update the cached 'Take Photo' command image.
+
+        Args:
+            image (:class:`~PIL.Image`): image
+
+        """
         with self.img_lock:
             self.img = image.copy()
 
     def stop(self):
+        """Stop activity"""
         self.running = False

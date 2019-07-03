@@ -3,7 +3,16 @@ from .edid import EDID
 
 class Display:
 
+    """Display using PiCamera Overlay"""
+
     def __init__(self, camera, size):
+        """
+
+        Args:
+            camera (:class:`~picamera.PiCamera`): picamera object
+            size (int, int): display area resolution
+
+        """
         self.size = size
         self.preferred_size = EDID().prefferd_mode()
         scale_w = self.preferred_size[0] / self.size[0]
@@ -15,6 +24,17 @@ class Display:
         self.layer = None
 
     def update(self, dst_rect, src_buf, src_size, src_format):
+        """
+
+        Update display.
+
+        Args:
+            dst_rect (int, int, int, int): destination area rectangle (left, upper, width, height)
+            src_buf (bytes): update image data buffer
+            src_size (int, int): update image data size (width, height)
+            src_format (string): "rgb"
+
+        """
         rect = (
             int(dst_rect[0] * self.scale + self.ofs_w),
             int(dst_rect[1] * self.scale + self.ofs_h),

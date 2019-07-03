@@ -7,12 +7,7 @@ from .task import Task
 
 class Pipe(Task):
 
-    """__init__(self)
-
-    Straightforward pipeline task.
-
-
-    """
+    """Straightforward Pipeline Task."""
 
     def __init__(self):
         super(Pipe, self).__init__()
@@ -59,6 +54,7 @@ class Pipe(Task):
         return False
 
     def run(self):
+        """Run activity"""
         for i in self._inlet():
             o = self.proc(i)
             self._outlet(o)
@@ -69,9 +65,16 @@ class Pipe(Task):
         raise NotImplementedError("'proc' must be overridden.")
 
     def stop(self):
+        """Stop activity"""
         self.running = False
 
     def connect(self, follow):
+        """
+        Connect following task.
+
+        Args:
+            follow (:class:`~actfw.task.task.Task`): following task
+        """
         q = Queue(1)
         follow._add_in_queue(q)
         self._add_out_queue(q)

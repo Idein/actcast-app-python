@@ -13,6 +13,20 @@ __version__ = _version.__version__
 
 
 def notify(notification, *args, **kwargs):
+    """
+
+    Make a notification to Actcast.
+
+    Args:
+        notification (list of dict): dicts must be encodable to JSON.
+
+    Example:
+
+        >>> import actfw
+        >>> actfw.notify([{'msg': 'Hello!'}])
+        [{"msg": "Hello!"}]
+
+    """
     kwargs['flush'] = True
     print(json.dumps(notification), *args, **kwargs)
 
@@ -28,8 +42,34 @@ _heartbeat_function = _default_heartbeat
 
 
 def set_heartbeat_function(f):
+    """
+
+    Set heartbeat action.
+
+    Args:
+        f (function): function which execute heartbeat action
+
+    Example:
+
+        >>> import actfw
+        >>> def heartbeat(): print("working!")
+        ...
+        >>> actfw.set_heartbeat_function(heartbeat)
+        >>> actfw.heartbeat()
+        working!
+
+    """
+    global _heartbeat_function
     _heartbeat_function = f
 
 
 def heartbeat():
+    """
+
+    Execute heartbeat action.
+
+    Notes:
+        Default action is 'touch /root/heartbeat'.
+
+    """
     _heartbeat_function()

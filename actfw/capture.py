@@ -7,11 +7,20 @@ from actfw.v4l2.video import Video, V4L2_PIX_FMT
 
 class Frame(object):
 
+    """Captured Frame"""
+
     def __init__(self, value):
         self.value = value
         self.updatable = True
 
     def getvalue(self):
+        """
+        Get frame data.
+
+        Returns:
+            bytes: captured image data
+
+        """
         self.updatable = False
         return self.value
 
@@ -24,7 +33,15 @@ class Frame(object):
 
 class PiCameraCapture(Producer):
 
+    """Captured Frame Producer for Raspberry Pi Camera Module"""
+
     def __init__(self, camera, *args, **kwargs):
+        """
+
+        Args:
+            camera (:class:`~picamera.PiCamera`): picamera object
+
+        """
         super(PiCameraCapture, self).__init__()
         self.camera = camera
         self.args = args
@@ -32,6 +49,7 @@ class PiCameraCapture(Producer):
         self.frames = []
 
     def run(self):
+        """Run producer activity"""
         def generator():
             stream = io.BytesIO()
             while self._is_running():
@@ -71,8 +89,24 @@ class PiCameraCapture(Producer):
 
 class V4LCameraCapture(Producer):
 
+    """Captured Frame Producer for Video4Linux"""
+
     def __init__(self, device='/dev/video0', size=(640, 480), framerate=30,
                  expected_format=V4L2_PIX_FMT.RGB24, fallback_formats=[V4L2_PIX_FMT.YUYV]):
+        """
+
+        Args:
+            device (str): v4l device path
+            size (int, int): capture resolution
+            framerate (int): capture framerate
+            expected_format (:class:`~actfw.v4l2.video.V4L2_PIX_FMT`): expected capture format
+            fallback_formats (list of :class:`~actfw.v4l2.video.V4L2_PIX_FMT`): fallback capture format
+
+        Notes:
+            If a camera doesn't support the expected_format,
+            try to capture one of the fallback_formats and convert it to expected_format.
+
+        """
         super(V4LCameraCapture, self).__init__()
         self.video = Video(device)
         self.frames = []
@@ -91,7 +125,7 @@ class V4LCameraCapture(Producer):
             self.video.queue_buffer(buf)
 
     def run(self):
-
+        """Run producer activity"""
         with self.video.start_streaming() as stream:
             time.sleep(1)  # for Logicool C270
             while self._is_running():
