@@ -3,6 +3,8 @@ from .pipe import Pipe
 
 class Producer(Pipe):
 
+    """Producer Task."""
+
     def __init__(self):
         super(Producer, self).__init__()
 

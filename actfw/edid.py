@@ -4,12 +4,20 @@ import re
 
 class EDID:
 
+    """Extended Display Information Data"""
+
     def __init__(self):
         subprocess.run('/opt/vc/bin/tvservice -d /tmp/edid'.split(), stdout=subprocess.DEVNULL)
         p = subprocess.run('/opt/vc/bin/edidparser /tmp/edid'.split(), stdout=subprocess.PIPE)
         self.edid = p.stdout.decode('utf-8')
 
     def prefferd_mode(self):
+        """Preffered Display Resolution.
+
+        Returns:
+            (int, int): (width, height)
+
+        """
         prog = re.compile(r'^.+preferred mode.+(DMT|CEA) \(([0-9]+)\) ([0-9]+)x([0-9]+)[pi]? @.+')
         for line in self.edid.split('\n'):
             result = prog.match(line)
