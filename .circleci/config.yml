@@ -32,7 +32,7 @@ jobs:
       - run:
           name: Documentation
           command: |
-            python3 setup.py build_sphinx
+            sphinx-build docs build/sphinx/html
             tar cvjf build/sphinx/html.tar.bz2 -C build/sphinx html
       - store_artifacts:
           path: build/sphinx/html

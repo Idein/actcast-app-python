@@ -1,9 +1,5 @@
 from setuptools import setup, find_packages
 import os
-# this is only necessary when not using setuptools/distribute
-from sphinx.setup_command import BuildDoc
-
-cmdclass = {'build_sphinx': BuildDoc}
 
 exec(open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'actfw', '_version.py')).read())
 
@@ -32,13 +28,4 @@ setup(
     keywords='actcast',
     packages=find_packages(),
     install_requires=['Pillow'],
-    command_options={
-        'build_sphinx': {
-            'project': ('setup.py', name),
-            'copyright': ('setup.py', '2019, {}'.format(author)),
-            'version': ('setup.py', __version__),
-            'release': ('setup.py', __version__),
-            'source_dir': ('setup.py', 'docs')
-        }
-    },
 )
