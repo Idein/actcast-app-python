@@ -1,19 +1,26 @@
 from setuptools import setup, find_packages
 import os
+# this is only necessary when not using setuptools/distribute
+from sphinx.setup_command import BuildDoc
+
+cmdclass = {'build_sphinx': BuildDoc}
 
 exec(open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'actfw', '_version.py')).read())
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+name='actfw'
+author='Idein Inc.'
+
 setup(
-    name='actfw',
+    name=name,
     version=__version__,
     description='Actcast Application Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/Idein/actcast-app-python',
-    author='Idein Inc.',
+    author=author,
     author_email='n.ohkawa@idein.jp',
     license='MIT',
     classifiers=[
@@ -25,4 +32,13 @@ setup(
     keywords='actcast',
     packages=find_packages(),
     install_requires=['Pillow'],
+    command_options={
+        'build_sphinx': {
+            'project': ('setup.py', name),
+            'copyright': ('setup.py', '2019, {}'.format(author)),
+            'version': ('setup.py', __version__),
+            'release': ('setup.py', __version__),
+            'source_dir': ('setup.py', 'docs')
+        }
+    },
 )

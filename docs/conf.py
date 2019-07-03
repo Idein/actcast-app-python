@@ -18,12 +18,12 @@ sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'actfw'
-copyright = '2019, Idein Inc.'
+# project = 'actfw'
+# copyright = '2019, Idein Inc.'
 author = 'Idein Inc.'
 
 # The full version, including alpha/beta/rc tags
-release = '1.2.0'
+# release = '1.2.0'
 
 
 # -- General configuration ---------------------------------------------------

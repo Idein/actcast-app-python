@@ -32,14 +32,13 @@ jobs:
           command: |
             pip3 install sphinx
             pip3 install sphinx_theme
-            sphinx-apidoc -f -o docs .
-            sphinx-build docs /root/html
-            tar cvjf /root/html.tar.bz2 -C /root html
+            python3 setup.py build_sphinx
+            tar cvjf build/sphinx/html.tar.bz2 -C build/sphinx html
       - store_artifacts:
-          path: /root/html
+          path: build/sphinx/html
           destination: html
       - store_artifacts:
-          path: /root/html.tar.bz2
+          path: build/sphinx/html.tar.bz2
           destination: html.tar.bz2
 
 workflows:
