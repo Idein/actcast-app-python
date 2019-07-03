@@ -32,7 +32,7 @@ class Application:
         Get given Act settings.
 
         Args:
-            dict: default settings
+            default_settings (dict): default settings
 
         Returns:
             dict: updated settings
@@ -54,7 +54,7 @@ class Application:
         Register the application task.
 
         Args:
-            task (:class:`~actfw.Task`): task
+            task (:class:`~actfw.task.task.Task`): task
         """
         if not issubclass(type(task), Task):
             raise TypeError("type(task) must be a subclass of actfw.task.Task.")
