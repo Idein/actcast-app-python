@@ -28,7 +28,8 @@ copyright = '2019, Idein Inc.'
 author = 'Idein Inc.'
 
 # The full version, including alpha/beta/rc tags
-release = '1.2.0'
+exec(open(os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), 'actfw', '_version.py')).read())
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
