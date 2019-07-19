@@ -34,7 +34,7 @@ def notify(notification, *args, **kwargs):
 _default_heartbeat_file = Path('/root/heartbeat')
 
 
-def _default_heartbeat():
+def _default_heartbeat(*args, **kwargs):
     _default_heartbeat_file.touch()
 
 
@@ -63,7 +63,7 @@ def set_heartbeat_function(f):
     _heartbeat_function = f
 
 
-def heartbeat():
+def heartbeat(*args, **kwargs):
     """
 
     Execute heartbeat action.
@@ -72,4 +72,4 @@ def heartbeat():
         Default action is 'touch /root/heartbeat'.
 
     """
-    _heartbeat_function()
+    _heartbeat_function(*args, **kwargs)
