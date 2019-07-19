@@ -398,7 +398,7 @@ class Video(object):
         else:
             raise RuntimeError("unknown driver '{}'".format(driver))
 
-    def lookup_config(self, width, height, framerate, pixel_format):
+    def lookup_config(self, width, height, framerate, pixel_format, expected_format):
 
         results = []
 
@@ -513,43 +513,69 @@ class Video(object):
                     else:
                         continue
 
-                    results.append(candidate)
+                    if expected_format == pixel_format:
+                        results.append(candidate)
+                    else:
+                        if self.try_convert(candidate, candidate.width, candidate.height, expected_format) is not None:
+                            results.append(candidate)
+
                     candidate = VideoConfig()
 
         return results
 
-    def set_format(self, conf, expected_width=None, expected_height=None, expected_fmt=None):
+    def try_convert(self, conf, expected_width, expected_height, expected_format):
+
+        fmt = format()
+        fmt.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
+        fmt.fmt.pix.width = conf.width
+        fmt.fmt.pix.height = conf.height
+        fmt.fmt.pix.pixelformat = conf.pixel_format
+        fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
+
+        expected_fmt = format()
+        expected_fmt.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
+        expected_fmt.fmt.pix.width = expected_width
+        expected_fmt.fmt.pix.height = expected_height
+        expected_fmt.fmt.pix.pixelformat = expected_format
+        expected_fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
+
+        result = _v4lconvert.try_format(self.converter, byref(expected_fmt), byref(fmt))
+        if -1 == result:
+            raise RuntimeError("incompatible format")
+
+        before = (expected_width, expected_height, expected_format)
+        after = (expected_fmt.fmt.pix.width,
+                 expected_fmt.fmt.pix.height,
+                 expected_fmt.fmt.pix.pixelformat)
+
+        if before == after:
+            return (fmt, expected_fmt)
+        else:
+            return None
+
+    def set_format(self, conf, expected_width=None, expected_height=None, expected_format=None):
 
         if expected_width is None:
             expected_width = conf.width
         if expected_height is None:
             expected_height = conf.height
-        if expected_fmt is None:
-            expected_fmt = conf.fmt
+        if expected_format is None:
+            expected_format = conf.pixel_format
 
-        self.fmt = format()
-        self.fmt.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
-        self.fmt.fmt.pix.width = conf.width
-        self.fmt.fmt.pix.height = conf.height
-        self.fmt.fmt.pix.pixelformat = conf.pixel_format
-        self.fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
+        fmts = self.try_convert(conf, expected_width, expected_height, expected_format)
+        if fmts is None:
+            fmts = self.try_convert(conf, conf.width, conf.height, expected_format)
+            if fmts is None:
+                raise RuntimeError("incompatible format")
 
-        self.expected_fmt = format()
-        self.expected_fmt.type = V4L2_BUF_TYPE.VIDEO_CAPTURE
-        self.expected_fmt.fmt.pix.width = expected_width
-        self.expected_fmt.fmt.pix.height = expected_height
-        self.expected_fmt.fmt.pix.pixelformat = expected_fmt
-        self.expected_fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
-
-        result = _v4lconvert.try_format(self.converter, byref(self.expected_fmt), byref(self.fmt))
-        if -1 == result:
-            raise RuntimeError("incompatible format")
-
+        (self.fmt, self.expected_fmt) = fmts
         result = self._ioctl(_VIDIOC.S_FMT, byref(self.fmt))
         if -1 == result:
             raise RuntimeError("ioctl(VIDIOC_S_FMT)")
 
-        return True
+        return (self.expected_fmt.fmt.pix.width,
+                self.expected_fmt.fmt.pix.height,
+                self.expected_fmt.fmt.pix.pixelformat)
 
     def set_framerate(self, conf):
 
