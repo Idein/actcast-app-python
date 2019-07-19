@@ -97,7 +97,7 @@ class V4LCameraCapture(Producer):
 
         Args:
             device (str): v4l device path
-            size (int, int): capture resolution
+            size (int, int): expected capture resolution
             framerate (int): capture framerate
             expected_format (:class:`~actfw.v4l2.video.V4L2_PIX_FMT`): expected capture format
             fallback_formats (list of :class:`~actfw.v4l2.video.V4L2_PIX_FMT`): fallback capture format
@@ -113,16 +113,26 @@ class V4LCameraCapture(Producer):
 
         width, height = size
 
-        candidates = self.video.lookup_config(width, height, framerate, expected_format)
+        candidates = self.video.lookup_config(width, height, framerate, expected_format, expected_format)
         for fallback_format in fallback_formats:
-            candidates += self.video.lookup_config(width, height, framerate, fallback_format)
+            candidates += self.video.lookup_config(width, height, framerate, fallback_format, expected_format)
         config = candidates[0]
-        self.video.set_format(config, width, height, expected_format)
+        fmt = self.video.set_format(config, width, height, expected_format)
+        self.capture_width, self.capture_height, self.capture_format = fmt
         self.video.set_framerate(config)
         # video.set_rotation(90)
         buffers = self.video.request_buffers(4)
         for buf in buffers:
             self.video.queue_buffer(buf)
+
+    def capture_size(self):
+        """
+        Get configured capture resolution.
+
+        Returns:
+            (int, int): configured capture resolution (width, height)
+        """
+        return (self.capture_width, self.capture_height)
 
     def run(self):
         """Run producer activity"""
