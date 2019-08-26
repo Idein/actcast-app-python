@@ -110,6 +110,7 @@ class _VIDIOC(enum.IntEnum):
     STREAMON = _IOW('V', 18, c_int)
     STREAMOFF = _IOW('V', 19, c_int)
     S_PARM = _IOWR('V', 22, streamparm)
+    G_CTRL = _IOWR('V', 27, control)
     S_CTRL = _IOWR('V', 28, control)
     ENUM_FRAMESIZES = _IOWR('V', 74, frmsizeenum)
     ENUM_FRAMEINTERVALS = _IOWR('V', 75, frmivalenum)
@@ -602,6 +603,49 @@ class Video(object):
         result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
         if -1 == result:
             return False
+
+        return True
+
+    def set_exposure_time(self, ms=None):
+
+        if ms is None:
+            cntl = control()
+            cntl.id = V4L2_CID.EXPOSURE_AUTO
+            cntl.value = V4L2_EXPOSURE.AUTO
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+            if -1 == result:
+                return False
+            expected = cntl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+            if -1 == result:
+                return False
+            if expected != cntl.value:
+                return False
+        else:
+            cntl = control()
+            cntl.id = V4L2_CID.EXPOSURE_AUTO
+            cntl.value = V4L2_EXPOSURE.MANUAL
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+            if -1 == result:
+                return False
+            expected = cntl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+            if -1 == result:
+                return False
+            if expected != cntl.value:
+                return False
+
+            cntl.id = V4L2_CID.EXPOSURE_ABSOLUTE
+            cntl.value = int(10 * ms)  # [100us]
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+            if -1 == result:
+                return False
+            expected = cntl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+            if -1 == result:
+                return False
+            if expected != cntl.value:
+                return False
 
         return True
 

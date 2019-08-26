@@ -1,5 +1,4 @@
 import io
-import time
 from queue import Full
 from .task import Producer
 from actfw.v4l2.video import Video, V4L2_PIX_FMT
@@ -134,13 +133,24 @@ class V4LCameraCapture(Producer):
         """
         return (self.capture_width, self.capture_height)
 
+    def configure(self, configurator):
+        """
+        Run user defined video configurator.
+
+        Args:
+            configurator : unary function (`actfw.v4l2.video.Video` -> a)
+
+        Returns:
+            object: return type of configurator
+        """
+        return configurator(self.video)
+
     def run(self):
         """Run producer activity"""
         with self.video.start_streaming() as stream:
-            time.sleep(1)  # for Logicool C270
             while self._is_running():
                 try:
-                    value = stream.capture()
+                    value = stream.capture(timeout=5)
                     updated = 0
                     for frame in reversed(self.frames):
                         if frame._update(value):
