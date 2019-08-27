@@ -264,6 +264,20 @@ class control(Structure):
     ]
 
 
+class queryctrl(Structure):
+    _fields_ = [
+        ('id', c_uint),
+        ('type', c_uint),
+        ('name', c_ubyte * 32),
+        ('minimum', c_int),
+        ('maximum', c_int),
+        ('step', c_int),
+        ('default_value', c_int),
+        ('flags', c_uint),
+        ('reserved', c_uint * 2),
+    ]
+
+
 class requestbuffers(Structure):
     _fields_ = [
         ('count', c_uint),

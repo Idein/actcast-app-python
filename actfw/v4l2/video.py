@@ -112,6 +112,7 @@ class _VIDIOC(enum.IntEnum):
     S_PARM = _IOWR('V', 22, streamparm)
     G_CTRL = _IOWR('V', 27, control)
     S_CTRL = _IOWR('V', 28, control)
+    QUERYCTRL = _IOWR('V', 36, queryctrl)
     ENUM_FRAMESIZES = _IOWR('V', 74, frmsizeenum)
     ENUM_FRAMEINTERVALS = _IOWR('V', 75, frmivalenum)
 
@@ -605,11 +606,17 @@ class Video(object):
         assert rotation % 90 == 0, 'rotation must be multiples of 90'
         rot = (rotation // 90) % 4 * 90  # [0, 90, 180, 270]
 
-        cntl = control()
-        cntl.id = V4L2_CID.ROTATE
-        cntl.value = rot
+        qctrl = queryctrl()
+        qctrl.id = V4L2_CID.ROTATE
+        result = self._ioctl(_VIDIOC.QUERYCTRL, byref(qctrl))
+        if -1 == result:
+            return False
 
-        result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+        ctrl = control()
+        ctrl.id = V4L2_CID.ROTATE
+        ctrl.value = rot
+
+        result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
         if -1 == result:
             return False
 
@@ -626,18 +633,26 @@ class Video(object):
             boolean: result
         """
 
-        cntl = control()
-        cntl.id = V4L2_CID.HFLIP
-        cntl.value = flip
+        qctrl = queryctrl()
+        qctrl.id = V4L2_CID.HFLIP
+        result = self._ioctl(_VIDIOC.QUERYCTRL, byref(qctrl))
+        if -1 == result:
+            return False
+        if qctrl.flags & V4L2_CTRL_FLAG_DISABLED:
+            return False
 
-        result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+        ctrl = control()
+        ctrl.id = V4L2_CID.HFLIP
+        ctrl.value = flip
+
+        result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
         if -1 == result:
             return False
-        expected = cntl.value
-        result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+        expected = ctrl.value
+        result = self._ioctl(_VIDIOC.G_CTRL, byref(ctrl))
         if -1 == result:
             return False
-        if expected != cntl.value:
+        if expected != ctrl.value:
             return False
 
         return True
@@ -653,18 +668,26 @@ class Video(object):
             boolean: result
         """
 
-        cntl = control()
-        cntl.id = V4L2_CID.VFLIP
-        cntl.value = flip
+        qctrl = queryctrl()
+        qctrl.id = V4L2_CID.VFLIP
+        result = self._ioctl(_VIDIOC.QUERYCTRL, byref(qctrl))
+        if -1 == result:
+            return False
+        if qctrl.flags & V4L2_CTRL_FLAG_DISABLED:
+            return False
 
-        result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+        ctrl = control()
+        ctrl.id = V4L2_CID.VFLIP
+        ctrl.value = flip
+
+        result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
         if -1 == result:
             return False
-        expected = cntl.value
-        result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+        expected = ctrl.value
+        result = self._ioctl(_VIDIOC.G_CTRL, byref(ctrl))
         if -1 == result:
             return False
-        if expected != cntl.value:
+        if expected != ctrl.value:
             return False
 
         return True
@@ -681,42 +704,42 @@ class Video(object):
         """
 
         if ms is None:
-            cntl = control()
-            cntl.id = V4L2_CID.EXPOSURE_AUTO
-            cntl.value = V4L2_EXPOSURE.AUTO
-            result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+            ctrl = control()
+            ctrl.id = V4L2_CID.EXPOSURE_AUTO
+            ctrl.value = V4L2_EXPOSURE.AUTO
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
             if -1 == result:
                 return False
-            expected = cntl.value
-            result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+            expected = ctrl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(ctrl))
             if -1 == result:
                 return False
-            if expected != cntl.value:
+            if expected != ctrl.value:
                 return False
         else:
-            cntl = control()
-            cntl.id = V4L2_CID.EXPOSURE_AUTO
-            cntl.value = V4L2_EXPOSURE.MANUAL
-            result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+            ctrl = control()
+            ctrl.id = V4L2_CID.EXPOSURE_AUTO
+            ctrl.value = V4L2_EXPOSURE.MANUAL
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
             if -1 == result:
                 return False
-            expected = cntl.value
-            result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+            expected = ctrl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(ctrl))
             if -1 == result:
                 return False
-            if expected != cntl.value:
+            if expected != ctrl.value:
                 return False
 
-            cntl.id = V4L2_CID.EXPOSURE_ABSOLUTE
-            cntl.value = int(10 * ms)  # [100us]
-            result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+            ctrl.id = V4L2_CID.EXPOSURE_ABSOLUTE
+            ctrl.value = int(10 * ms)  # [100us]
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
             if -1 == result:
                 return False
-            expected = cntl.value
-            result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+            expected = ctrl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(ctrl))
             if -1 == result:
                 return False
-            if expected != cntl.value:
+            if expected != ctrl.value:
                 return False
 
         return True
