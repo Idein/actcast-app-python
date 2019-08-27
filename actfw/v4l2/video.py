@@ -592,6 +592,15 @@ class Video(object):
         return True
 
     def set_rotation(self, rotation):
+        """
+        Rotate video if it supported.
+
+        Args:
+            rotation (int): video rotation (must be multiples of 90)
+
+        Returns:
+            boolean: result
+        """
 
         assert rotation % 90 == 0, 'rotation must be multiples of 90'
         rot = (rotation // 90) % 4 * 90  # [0, 90, 180, 270]
@@ -606,7 +615,70 @@ class Video(object):
 
         return True
 
+    def set_horizontal_flip(self, flip):
+        """
+        Flip video (horizontal) if it supported.
+
+        Args:
+            flip (boolean): enable flip
+
+        Returns:
+            boolean: result
+        """
+
+        cntl = control()
+        cntl.id = V4L2_CID.HFLIP
+        cntl.value = flip
+
+        result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+        if -1 == result:
+            return False
+        expected = cntl.value
+        result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+        if -1 == result:
+            return False
+        if expected != cntl.value:
+            return False
+
+        return True
+
+    def set_vertical_flip(self, flip):
+        """
+        Flip video (vertical) if it supported.
+
+        Args:
+            flip (boolean): enable flip
+
+        Returns:
+            boolean: result
+        """
+
+        cntl = control()
+        cntl.id = V4L2_CID.VFLIP
+        cntl.value = flip
+
+        result = self._ioctl(_VIDIOC.S_CTRL, byref(cntl))
+        if -1 == result:
+            return False
+        expected = cntl.value
+        result = self._ioctl(_VIDIOC.G_CTRL, byref(cntl))
+        if -1 == result:
+            return False
+        if expected != cntl.value:
+            return False
+
+        return True
+
     def set_exposure_time(self, ms=None):
+        """
+        Set exposure time.
+
+        Args:
+            ms (int or None): exposure time [msec] (None means auto)
+
+        Returns:
+            boolean: result
+        """
 
         if ms is None:
             cntl = control()
