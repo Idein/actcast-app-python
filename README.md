@@ -8,7 +8,7 @@ for Raspberry Pi
 
 ```
 sudo apt-get update
-sudo apt-get install -y python3-pil python3-setuptools python3-wheel picamera
+sudo apt-get install -y python3-pil python3-setuptools python3-wheel
 pip3 install .
 ```
 
@@ -71,6 +71,7 @@ Please, see and try examples.
     * Support application setting
     * Support application heartbeat
     * Support "Take Photo" command
+    * Depends: python3-picamera fonts-dejavu-core
 * `example/grayscale` : Next level application example
     * Use HDMI display as 640x480 area
     * Capture 320x240 RGB image from CSI camera
@@ -80,6 +81,7 @@ Please, see and try examples.
     * Support application setting
     * Support application heartbeat
     * Support "Take Photo" command
+    * Depends: python3-picamera
 * `example/parallel_grayscale` : Paralell processing application example
     * Use HDMI display as 640x480 area
     * Capture 320x240 RGB image from CSI camera
@@ -92,6 +94,7 @@ Please, see and try examples.
     * Support application setting
     * Support application heartbeat
     * Support "Take Photo" command
+    * Depends: python3-picamera
 * `example/uvccamera` : UVC camera capture example
     * `picamera` is unnecessary
     * Use HDMI display center 640x480 area
@@ -102,3 +105,4 @@ Please, see and try examples.
     * Support application setting
     * Support application heartbeat
     * Support "Take Photo" command
+    * Depends: libv4l-0 libv4lconvert0
