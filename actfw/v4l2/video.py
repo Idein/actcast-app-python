@@ -541,9 +541,6 @@ class Video(object):
         expected_fmt.fmt.pix.pixelformat = expected_format
         expected_fmt.fmt.pix.field = V4L2_FIELD.INTERLACED
 
-        if (expected_width, expected_height, expected_format) == (conf.width, conf.height, conf.pixel_format):
-            return (fmt, expected_fmt)
-
         result = _v4lconvert.try_format(self.converter, byref(expected_fmt), byref(fmt))
         if -1 == result:
             raise RuntimeError("incompatible format")
