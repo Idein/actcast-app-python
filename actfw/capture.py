@@ -1,7 +1,7 @@
 import io
 from queue import Full
 from .task import Producer
-from actfw.v4l2.video import Video, V4L2_PIX_FMT
+from actfw.v4l2.video import Video, VideoPort, V4L2_PIX_FMT
 
 
 class Frame(object):
@@ -111,6 +111,16 @@ class V4LCameraCapture(Producer):
         self.frames = []
 
         width, height = size
+
+        if self.video.query_capability() == VideoPort.CSI:
+
+            # workaround for bcm2835-v4l2 format pixsize & bytesperline bug
+            width = (width + 31) // 32 * 32
+            height = (height + 15) // 16 * 16
+
+            # workaround for bcm2835-v4l2 IMX219 32x32 -> 800x800 capture timeout bug
+            candidates = self.video.lookup_config(64, 64, 5, V4L2_PIX_FMT.RGB24, V4L2_PIX_FMT.RGB24)
+            self.video.set_format(candidates[0], 64, 64, V4L2_PIX_FMT.RGB24)
 
         candidates = self.video.lookup_config(width, height, framerate, expected_format, expected_format)
         for fallback_format in fallback_formats:
