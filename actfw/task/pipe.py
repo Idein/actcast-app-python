@@ -10,6 +10,8 @@ class Pipe(Task):
     """Straightforward Pipeline Task."""
 
     def __init__(self):
+        """
+        """
         super(Pipe, self).__init__()
         self.running = True
         self.in_queues = []
@@ -62,6 +64,12 @@ class Pipe(Task):
                 break
 
     def proc(self, i):
+        """
+        Pipeline Task Processor
+
+        Args:
+            i : task input
+        """
         raise NotImplementedError("'proc' must be overridden.")
 
     def stop(self):
