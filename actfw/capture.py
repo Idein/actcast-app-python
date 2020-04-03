@@ -137,6 +137,7 @@ class V4LCameraCapture(Producer):
     def capture_size(self):
         """
         Get configured capture resolution.
+        A configured resolution may be more larger than expected one.
 
         Returns:
             (int, int): configured capture resolution (width, height)
