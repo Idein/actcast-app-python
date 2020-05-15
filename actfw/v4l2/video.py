@@ -692,12 +692,13 @@ class Video(object):
 
         return True
 
-    def set_exposure_time(self, ms=None):
+    def set_exposure_time(self, ms=None, auto_priority=False):
         """
         Set exposure time.
 
         Args:
             ms (int or None): exposure time [msec] (None means auto)
+            auto_priority (boolean): allow dynamically vary the frame rate for auto exposure
 
         Returns:
             boolean: result
@@ -716,6 +717,19 @@ class Video(object):
                 return False
             if expected != ctrl.value:
                 return False
+
+            ctrl.id = V4L2_CID.EXPOSURE_AUTO_PRIORITY
+            ctrl.value = auto_priority
+            result = self._ioctl(_VIDIOC.S_CTRL, byref(ctrl))
+            if -1 == result:
+                return False
+            expected = ctrl.value
+            result = self._ioctl(_VIDIOC.G_CTRL, byref(ctrl))
+            if -1 == result:
+                return False
+            if expected != ctrl.value:
+                return False
+
         else:
             ctrl = control()
             ctrl.id = V4L2_CID.EXPOSURE_AUTO
