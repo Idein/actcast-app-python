@@ -290,7 +290,7 @@ class Window(object):
             rgb ((int, int, int)): clear color
         """
         color = b''.join(map(lambda x: x.to_bytes(1, 'little'), rgb))
-        self.blit(color*self.size[0]*self.size[1])
+        self.blit(color * self.size[0] * self.size[1])
 
     def blit(self, image):
         """
@@ -302,9 +302,9 @@ class Window(object):
         src_rect = VC_RECT_T()
         _bcm_host.vc_dispmanx_rect_set(byref(src_rect), 0, 0, self.size[0], self.size[1])
         pitch = (self.size[0] * 3 + 32 - 1) // 32 * 32
-        buf = cast(create_string_buffer(image), POINTER(c_char)).contents
+        buf = c_char_p(image)
         result = _bcm_host.vc_dispmanx_resource_write_data(
-            self.resources[0], self.format, c_int(pitch), byref(buf), byref(src_rect))
+            self.resources[0], self.format, c_int(pitch), buf, byref(src_rect))
         if result != 0:
             raise RuntimeError("Failed to blit.: {}".format(result))
 
