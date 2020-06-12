@@ -45,6 +45,11 @@ class _libbcm_host(object):
             raise FileNotFoundError("Not found: 'libbcm_host.so'")
         return self.lib.vc_dispmanx_element_add(*args, **kwargs)
 
+    def vc_dispmanx_element_change_layer(self, *args, **kwargs):
+        if self.lib is None:
+            raise FileNotFoundError("Not found: 'libbcm_host.so'")
+        return self.lib.vc_dispmanx_element_change_layer(*args, **kwargs)
+
     def vc_dispmanx_update_submit_sync(self, *args, **kwargs):
         if self.lib is None:
             raise FileNotFoundError("Not found: 'libbcm_host.so'")
@@ -291,6 +296,18 @@ class Window(object):
         """
         color = b''.join(map(lambda x: x.to_bytes(1, 'little'), rgb))
         self.blit(color * self.size[0] * self.size[1])
+
+    def set_layer(self, layer):
+        """
+        Set window layer.
+
+        Args:
+            layer (int): new layer
+        """
+        update = _bcm_host.vc_dispmanx_update_start(0)
+        _bcm_host.vc_dispmanx_element_change_layer(update, self.element, layer)
+        _bcm_host.vc_dispmanx_update_submit_sync(update)
+        self.layer = layer
 
     def blit(self, image):
         """
