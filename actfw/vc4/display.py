@@ -309,6 +309,19 @@ class Window(object):
         _bcm_host.vc_dispmanx_update_submit_sync(update)
         self.layer = layer
 
+    def swap_layer(self, window):
+        """
+        Swap window layer.
+
+        Args:
+            window (:class:`~actfw.vc4.display.Window`): target window
+        """
+        update = _bcm_host.vc_dispmanx_update_start(0)
+        _bcm_host.vc_dispmanx_element_change_layer(update, self.element, window.layer)
+        _bcm_host.vc_dispmanx_element_change_layer(update, window.element, self.layer)
+        _bcm_host.vc_dispmanx_update_submit_sync(update)
+        self.layer, window.layer = window.layer, self.layer
+
     def blit(self, image):
         """
         Blit image to window.
