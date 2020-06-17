@@ -27,6 +27,8 @@ def notify(notification, *args, **kwargs):
         [{"msg": "Hello!"}]
 
     """
+    if type(notification) != list:
+        raise TypeError('must be a list of JSON encodable objects.')
     kwargs['flush'] = True
     print(json.dumps(notification), *args, **kwargs)
 
