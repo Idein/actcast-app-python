@@ -14,4 +14,5 @@ class Producer(Pipe):
         raise NotImplementedError('This is producer')
 
     def _inlet(self):
-        yield ()
+        while self._is_running():
+            yield ()
