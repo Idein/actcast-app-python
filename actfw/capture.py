@@ -62,7 +62,7 @@ class PiCameraCapture(Producer):
                             updated += 1
                         else:
                             break
-                    self.frames = self.frames[len(self.frames)-updated:]
+                    self.frames = self.frames[len(self.frames) - updated:]
                     frame = Frame(value)
                     if self._outlet(frame):
                         self.frames.append(frame)
@@ -91,7 +91,7 @@ class V4LCameraCapture(Producer):
     """Captured Frame Producer for Video4Linux"""
 
     def __init__(self, device='/dev/video0', size=(640, 480), framerate=30,
-                 expected_format=V4L2_PIX_FMT.RGB24, fallback_formats=[V4L2_PIX_FMT.YUYV]):
+                 expected_format=V4L2_PIX_FMT.RGB24, fallback_formats=[V4L2_PIX_FMT.YUYV, V4L2_PIX_FMT.MJPEG]):
         """
 
         Args:
@@ -168,7 +168,7 @@ class V4LCameraCapture(Producer):
                             updated += 1
                         else:
                             break
-                    self.frames = self.frames[len(self.frames)-updated:]
+                    self.frames = self.frames[len(self.frames) - updated:]
                     frame = Frame(value)
                     if self._outlet(frame):
                         self.frames.append(frame)
