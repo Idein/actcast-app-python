@@ -100,11 +100,11 @@ def _IOWR(type, nr, size): return _IOC(_IOC_READ | _IOC_WRITE, type, nr, sizeof(
 
 
 class _VIDIOC(enum.IntEnum):
-    QUERYCAP = _IOR('V',  0, capability)
-    ENUM_FMT = _IOWR('V',  2, fmtdesc)
-    S_FMT = _IOWR('V',  5, format)
-    REQBUFS = _IOWR('V',  8, requestbuffers)
-    QUERYBUF = _IOWR('V',  9, buffer)
+    QUERYCAP = _IOR('V', 0, capability)
+    ENUM_FMT = _IOWR('V', 2, fmtdesc)
+    S_FMT = _IOWR('V', 5, format)
+    REQBUFS = _IOWR('V', 8, requestbuffers)
+    QUERYBUF = _IOWR('V', 9, buffer)
     QBUF = _IOWR('V', 15, buffer)
     DQBUF = _IOWR('V', 17, buffer)
     STREAMON = _IOW('V', 18, c_int)
@@ -521,7 +521,11 @@ class Video(object):
                         if self.try_convert(candidate, candidate.width, candidate.height, expected_format) is not None:
                             results.append(candidate)
 
+                    old_candidate = candidate
                     candidate = VideoConfig()
+                    candidate.pixel_format = old_candidate.pixel_format
+                    candidate.width = old_candidate.width
+                    candidate.height = old_candidate.height
 
         return results
 
