@@ -2,6 +2,7 @@ import io
 from queue import Full
 from .task import Producer
 from actfw.v4l2.video import Video, VideoPort, V4L2_PIX_FMT
+import enum
 
 
 class Frame(object):
@@ -88,16 +89,20 @@ class PiCameraCapture(Producer):
 
 class V4LCameraCapture(Producer):
 
+    FormatSelector = enum.Enum('FormatSelector', 'DEFAULT PROPER')
+
     """Captured Frame Producer for Video4Linux"""
 
     def __init__(self, device='/dev/video0', size=(640, 480), framerate=30,
-                 expected_format=V4L2_PIX_FMT.RGB24, fallback_formats=[V4L2_PIX_FMT.YUYV, V4L2_PIX_FMT.MJPEG]):
+                 expected_format=V4L2_PIX_FMT.RGB24,
+                 fallback_formats=[V4L2_PIX_FMT.YUYV, V4L2_PIX_FMT.MJPEG],
+                 format_selector=FormatSelector.DEFAULT):
         """
 
         Args:
             device (str): v4l device path
             size (int, int): expected capture resolution
-            framerate (int): capture framerate
+            framerate (int): expected capture framerate
             expected_format (:class:`~actfw.v4l2.video.V4L2_PIX_FMT`): expected capture format
             fallback_formats (list of :class:`~actfw.v4l2.video.V4L2_PIX_FMT`): fallback capture format
 
@@ -122,10 +127,27 @@ class V4LCameraCapture(Producer):
             candidates = self.video.lookup_config(64, 64, 5, V4L2_PIX_FMT.RGB24, V4L2_PIX_FMT.RGB24)
             self.video.set_format(candidates[0], 64, 64, V4L2_PIX_FMT.RGB24)
 
-        candidates = self.video.lookup_config(width, height, framerate, expected_format, expected_format)
-        for fallback_format in fallback_formats:
-            candidates += self.video.lookup_config(width, height, framerate, fallback_format, expected_format)
-        config = candidates[0]
+        if format_selector == V4LCameraCapture.FormatSelector.PROPER:
+            def cmp(config):
+                return (
+                    config.width * config.height,
+                    config.height,
+                    config.width,
+                    config.interval.denominator / config.interval.numerator
+                )
+        else:
+            def cmp(config):
+                return 1
+        config = None
+        fmts = [expected_format] + fallback_formats
+        for fmt in fmts:
+            candidates = self.video.lookup_config(width, height, framerate, fmt, expected_format)
+            candidates = sorted(candidates, key=cmp)
+            if len(candidates) > 0:
+                config = candidates[0]
+                break
+        if config is None:
+            raise RuntimeError("expected capture format is unsupported")
         fmt = self.video.set_format(config, width, height, expected_format)
         self.capture_width, self.capture_height, self.capture_format = fmt
         self.video.set_framerate(config)
