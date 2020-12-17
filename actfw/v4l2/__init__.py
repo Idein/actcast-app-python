@@ -1,2 +1,1 @@
-from . import video
-from . import types
+from actfw_core.v4l2 import *
