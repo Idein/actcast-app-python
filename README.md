@@ -1,16 +1,10 @@
-# Actcast Application Framework for Python
+# *DEPRECATED* Actcast Application Framework for Python
 
 This package provides a Python API for developing Actcast apps.
 
-## Installation
+This framework has moved into [actfw-core](https://pypi.org/project/actfw-core/) & [actfw-raspberrypi](https://pypi.org/project/actfw-raspberrypi/) since v1.4.0.
 
-for Raspberry Pi
-
-```
-sudo apt-get update
-sudo apt-get install -y python3-pil python3-setuptools python3-wheel
-pip3 install .
-```
+This package only provides `actfw` module name, which interally binds submodules in `actfw_core` and `actfw_raspberrypi`.
 
 ## Document
 
@@ -61,52 +55,3 @@ app.register_task(c)
 ~~~~python
 app.run()
 ~~~~
-
-Please, see and try examples.
-
-## Example
-
-* `example/hello` : The most simple application example
-    * Use HDMI display as 640x480 area
-    * Capture 320x240 RGB image from CSI camera
-    * Draw "Hello, Actcast!" text
-    * Display it as 640x480 image (with x2 scaling)
-    * Notice message for each frame
-    * Support application setting
-    * Support application heartbeat
-    * Support "Take Photo" command
-    * Depends: python3-picamera fonts-dejavu-core
-* `example/grayscale` : Next level application example
-    * Use HDMI display as 640x480 area
-    * Capture 320x240 RGB image from CSI camera
-    * Convert it to grayscale
-    * Display it as 640x480 image (with x2 scaling)
-    * Notice message for each frame
-    * Support application setting
-    * Support application heartbeat
-    * Support "Take Photo" command
-    * Depends: python3-picamera
-* `example/parallel_grayscale` : Paralell processing application example
-    * Use HDMI display as 640x480 area
-    * Capture 320x240 RGB image from CSI camera
-    * Convert it to grayscale
-        * There exists 2 converter task
-        * Round-robin task scheduling
-    * Display it as 640x480 image (with x2 scaling)
-    * Notice message for each frame
-        * Show which converter processes image
-    * Support application setting
-    * Support application heartbeat
-    * Support "Take Photo" command
-    * Depends: python3-picamera
-* `example/uvccamera` : UVC camera capture example
-    * `picamera` is unnecessary
-    * Use HDMI display center 640x480 area
-    * Capture 320x240 RGB image from UVC camera
-    * Convert it to grayscale
-    * Display it as 640x480 image (with x2 scaling)
-    * Notice grayscale pixel data histogram
-    * Support application setting
-    * Support application heartbeat
-    * Support "Take Photo" command
-    * Depends: libv4l-0 libv4lconvert0

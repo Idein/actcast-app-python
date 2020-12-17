@@ -12,7 +12,7 @@ author = 'Idein Inc.'
 setup(
     name=name,
     version=__version__,
-    description='Actcast Application Framework',
+    description='*DEPRECATED* Actcast Application Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/Idein/actcast-app-python',
@@ -27,5 +27,5 @@ setup(
     ],
     keywords='actcast',
     packages=find_packages(),
-    install_requires=['Pillow'],
+    install_requires=[],
 )
