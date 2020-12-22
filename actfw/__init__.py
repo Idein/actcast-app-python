@@ -1,2 +1,2 @@
-# from actfw_core import *
-# from actfw_raspberrypi import *
+from actfw_core import *
+from actfw_raspberrypi import *
