@@ -1,6 +1,7 @@
 import os
 import json
 from pathlib import Path
+import time
 import actfw.task
 import actfw.capture
 from .application import Application
@@ -31,6 +32,42 @@ def notify(notification, *args, **kwargs):
         raise TypeError('must be a list of JSON encodable objects.')
     kwargs['flush'] = True
     print(json.dumps(notification), *args, **kwargs)
+
+
+class Notifier():
+    """
+
+    Notifier at constant-time intervals.
+
+    Args:
+        notification_window (int or float): seconds as the interval of notification
+
+    Example:
+
+        >>> import actfw
+        >>> notifier = actfw.Notifier(3)  # the interval is 3-seconds
+        >>> for i in range(100):
+        ...   n.notify([{"hello": "msg"}])
+        ...   time.sleep(0.1)
+        ...
+        [{"hello": "msg"}]
+        [{"hello": "msg"}]
+        [{"hello": "msg"}]
+        [{"hello": "msg"}]
+    """
+
+    def __init__(self, notification_window):
+        self.notification_window = notification_window
+        self.last_notification = None
+
+    def notify(self, notification, *args, **kwargs):
+        _current_time = time.time()
+
+        if self.last_notification is not None and _current_time - self.last_notification < self.notification_window:
+            pass
+        else:
+            notify(notification, *args, **kwargs)
+            self.last_notification = _current_time
 
 
 _default_heartbeat_file = Path('/root/heartbeat')
